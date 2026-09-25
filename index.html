@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carnivore Reset & Sugar Detox</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, sans-serif; }
+    .card-gradient { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; }
+    .glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.25); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between pb-16 md:pb-0">
+
+  <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-5xl mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-gradient-to-br from-red-600 to-amber-600 text-white p-2.5 rounded-xl font-black text-xl">
+          <i class="fa-solid fa-drumstick-bite"></i>
+        </div>
+        <div>
+          <h1 class="font-black text-xl tracking-tight bg-gradient-to-r from-red-400 to-amber-400 bg-clip-text text-transparent">Carnivore Reset</h1>
+          <p class="text-xs text-slate-400">Day 2 • Goal &lt; 80kg</p>
+        </div>
+      </div>
+      <button onclick="openSOS()" class="bg-red-600 text-white text-xs font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-lg animate-pulse">
+        <i class="fa-solid fa-bolt text-yellow-300"></i> SOS
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto w-full p-4 flex-1 space-y-6">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+      <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+        <i class="fa-solid fa-pen-to-square text-red-500"></i> Log Today's Meal & Weight
+      </h2>
+      <form id="logForm" onsubmit="handleLogSubmit(event)" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input type="text" id="mealTitle" placeholder="Meal (e.g. Sirloin Steak + 2 Eggs)" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100">
+          <input type="number" step="0.1" id="currentWeight" placeholder="Current Weight in kg (e.g. 101.5)" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100">
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-3 rounded-xl shadow-lg">Save Entry</button>
+      </form>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+      <h2 class="text-lg font-bold text-slate-100"><i class="fa-solid fa-chart-line text-amber-500"></i> Weight Progress (Target &lt; 80kg)</h2>
+      <div class="w-full h-56">
+        <canvas id="weightChart"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <div id="sosModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-red-500 max-w-md w-full rounded-2xl p-6 space-y-4 glow-red">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <h3 class="text-red-500 font-black text-lg"><i class="fa-solid fa-triangle-exclamation"></i> SUGAR CRAVING SOS</h3>
+        <button onclick="closeSOS()" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <p class="text-xs text-slate-200">1. Pour a glass of <strong>ICE-COLD salt water</strong>.<br>2. Drink 300ml right now.<br>3. Remind yourself: <strong>You quit smoking! You are stronger than sugar!</strong></p>
+      <button onclick="closeSOS()" class="w-full bg-red-600 text-white font-bold py-2.5 rounded-xl">I Got This!</button>
+    </div>
+  </div>
+
+  <script>
+    let myChart = null;
+    let logs = [{ date: 'Start', weight: 103.0 }, { date: 'Day 2', weight: 101.5 }];
+
+    function openSOS() { document.getElementById('sosModal').classList.remove('hidden'); }
+    function closeSOS() { document.getElementById('sosModal').classList.add('hidden'); }
+
+    function handleLogSubmit(e) {
+      e.preventDefault();
+      const weight = parseFloat(document.getElementById('currentWeight').value);
+      logs.push({ date: 'Today', weight: weight });
+      initChart();
+      alert('Entry saved!');
+      e.target.reset();
+    }
+
+    function initChart() {
+      const ctx = document.getElementById('weightChart').getContext('2d');
+      if (myChart) myChart.destroy();
+      myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: logs.map(l => l.date),
+          datasets: [{ label: 'Weight (kg)', data: logs.map(l => l.weight), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
+    initChart();
+  </script>
+</body>
+</html>
