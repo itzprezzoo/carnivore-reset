@@ -3,63 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carnivore Reset & Quit Smoke App</title>
+  <title>Carnivore Reset & Health Tracker</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-    .card-gradient { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; }
-    .glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.25); }
-    .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); }
+    body { background-color: #0b0f19; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .card-gradient { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; }
+    .glow-sugar { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+    .glow-smoke { box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+    .glow-gold { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-24 md:pb-0">
 
-  <!-- Header -->
-  <header class="bg-slate-900 border-b border-slate-800 p-3 sticky top-0 z-50 shadow-lg">
-    <div class="max-w-xl mx-auto flex justify-between items-center gap-2">
-      <div class="flex items-center space-x-2.5">
-        <div class="bg-gradient-to-br from-red-600 to-amber-600 text-white p-2 rounded-xl font-black text-lg shadow-md shrink-0">
-          <i class="fa-solid fa-drumstick-bite"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-1.5">
-            <h1 class="font-black text-base tracking-tight bg-gradient-to-r from-red-400 via-amber-400 to-orange-400 bg-clip-text text-transparent">Carnivore Reset</h1>
-            <span class="bg-amber-500/20 text-amber-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-amber-500/30 uppercase">&lt; 80kg</span>
-          </div>
-          <p class="text-[11px] text-slate-400 font-medium">Day 2 • OMAD & Smoke Free</p>
-        </div>
-      </div>
+  <!-- Sleek Top Header -->
+  <header class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800 p-3.5 sticky top-0 z-50 shadow-2xl">
+    <div class="max-w-xl mx-auto space-y-3">
       
-      <!-- SOS Buttons -->
-      <div class="flex items-center gap-1.5 shrink-0">
-        <button onclick="openSOS('sugar')" class="bg-red-600 hover:bg-red-500 text-white text-[11px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow-md">
-          <i class="fa-solid fa-bolt text-yellow-300"></i> Sugar
+      <!-- Top Branding Row -->
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <div class="bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 text-slate-950 p-2.5 rounded-2xl font-black text-xl shadow-lg shadow-red-900/40">
+            <i class="fa-solid fa-drumstick-bite"></i>
+          </div>
+          <div>
+            <h1 class="font-black text-lg tracking-tight bg-gradient-to-r from-red-400 via-amber-300 to-orange-400 bg-clip-text text-transparent">
+              Carnivore Reset
+            </h1>
+            <div class="flex items-center gap-2 mt-0.5">
+              <span class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-700">Day 2</span>
+              <span class="bg-amber-500/10 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/30">Target: &lt; 80kg</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <span class="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider">Start Weight</span>
+          <p class="text-xs font-bold text-slate-200 font-mono">103.0 kg</p>
+        </div>
+      </div>
+
+      <!-- High-Impact SOS Button Bar -->
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button onclick="openSOS('sugar')" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-lg glow-sugar transition active:scale-95">
+          <i class="fa-solid fa-bolt text-yellow-300 animate-pulse text-sm"></i>
+          <span>SUGAR SOS</span>
         </button>
-        <button onclick="openSOS('smoke')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow-md">
-          <i class="fa-solid fa-ban-smoking text-red-400"></i> Smoke
+
+        <button onclick="openSOS('smoke')" class="bg-gradient-to-r from-slate-800 to-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/40 font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-lg glow-smoke transition active:scale-95">
+          <i class="fa-solid fa-ban-smoking text-cyan-400 text-sm"></i>
+          <span>SMOKE SOS</span>
         </button>
       </div>
+
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- Main Content Container -->
   <main class="max-w-xl mx-auto w-full p-3.5 flex-1 space-y-4">
 
-    <!-- Challenge Banner -->
-    <div class="bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-900 border border-amber-500/40 rounded-xl p-3.5 flex items-center justify-between gap-3 shadow-lg glow-amber">
+    <!-- Challenge Card -->
+    <div class="bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-900 border border-amber-500/40 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-xl glow-gold">
       <div class="flex items-start gap-2.5">
-        <div class="bg-amber-500/20 p-2 rounded-lg border border-amber-500/40 text-amber-400 shrink-0 mt-0.5">
+        <div class="bg-amber-500/20 p-2.5 rounded-xl border border-amber-500/40 text-amber-400 shrink-0 mt-0.5">
           <i class="fa-solid fa-trophy text-base"></i>
         </div>
         <div>
-          <span class="text-[9px] uppercase font-black bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded font-mono">Today's Challenge</span>
-          <h3 class="font-bold text-slate-100 text-xs mt-0.5">Sub-Zero Salt Hydration Challenge</h3>
-          <p class="text-[11px] text-slate-400 mt-0.5">Drink 500ml ice water when a sugar or smoking craving hits!</p>
+          <span class="text-[9px] uppercase font-black bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded font-mono">Daily Challenge</span>
+          <h3 class="font-bold text-slate-100 text-xs mt-1">Sub-Zero Salt Hydration Challenge</h3>
+          <p class="text-[11px] text-slate-400 mt-0.5">Drink 500ml ice water with sea salt when cravings strike!</p>
         </div>
       </div>
-      <button onclick="completeChallenge()" id="challengeBtn" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] px-3 py-2 rounded-lg whitespace-nowrap shadow-md shrink-0">
+      <button onclick="completeChallenge()" id="challengeBtn" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] px-3 py-2 rounded-xl whitespace-nowrap shadow-md shrink-0">
         <i class="fa-solid fa-check-circle mr-1"></i> Done (+50 pts)
       </button>
     </div>
@@ -67,13 +83,13 @@
     <!-- TAB 1: TRIBE FEED -->
     <div id="tab-feed" class="tab-content space-y-4">
       <div id="socialFeedList" class="space-y-4">
-        <div class="bg-slate-900 rounded-xl p-3.5 border border-slate-800 space-y-3 shadow-xl">
+        <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-3 shadow-xl">
           <div class="flex justify-between items-center">
             <div class="flex items-center space-x-2.5">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs">YOU</div>
+              <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs shadow">YOU</div>
               <div>
                 <div class="flex items-center gap-1.5">
-                  <span class="font-bold text-slate-200 text-xs">You (OMAD Warrior)</span>
+                  <span class="font-bold text-slate-200 text-xs">You</span>
                   <span class="text-[9px] bg-red-950 text-red-400 border border-red-800/60 px-1.5 py-0.5 rounded-full font-bold">Day 2</span>
                 </div>
                 <span class="text-[10px] text-slate-400">Target: Sub-80kg</span>
@@ -82,10 +98,10 @@
             <span class="text-xs font-bold text-amber-400 font-mono">101.5 kg</span>
           </div>
           <p class="text-xs text-slate-300 leading-relaxed">Back on the carnivore journey! Small sirloin steak + fried eggs in butter. Defeated soda and smoke cravings today! 🥩🍳</p>
-          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Steak and eggs" class="w-full h-48 object-cover rounded-lg border border-slate-800">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Steak and eggs" class="w-full h-48 object-cover rounded-xl border border-slate-800">
           <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800">
             <button onclick="toggleLike(this)" class="flex items-center gap-1.5 hover:text-red-400 transition">
-              <i class="fa-regular fa-heart"></i> <span class="like-count">18 Support Likes</span>
+              <i class="fa-regular fa-heart text-sm"></i> <span class="like-count">18 Support Likes</span>
             </button>
             <span class="text-[10px] text-slate-500"><i class="fa-solid fa-fire text-amber-500 mr-1"></i> Smoke Quit Legend</span>
           </div>
@@ -93,51 +109,50 @@
       </div>
     </div>
 
-    <!-- TAB 2: MY DIARY LOG (WITH REAL PHOTO UPLOAD) -->
+    <!-- TAB 2: MY DIARY LOG -->
     <div id="tab-diary" class="tab-content hidden space-y-4">
-      <div class="card-gradient rounded-xl p-4 shadow-xl">
+      <div class="card-gradient rounded-2xl p-4 shadow-xl">
         <h2 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
           <i class="fa-solid fa-pen-to-square text-red-500"></i> Log Meal & Photo
         </h2>
         <form id="logForm" onsubmit="handleLogSubmit(event)" class="space-y-3">
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Meal Title</label>
-            <input type="text" id="mealTitle" placeholder="e.g. Small Sirloin + 2 Eggs" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100">
+            <input type="text" id="mealTitle" placeholder="e.g. Small Sirloin + 2 Eggs" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-red-500">
           </div>
           
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-semibold text-slate-400 mb-1">Weight (kg)</label>
-              <input type="number" step="0.1" id="currentWeight" placeholder="e.g. 101.0" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 font-mono">
+              <input type="number" step="0.1" id="currentWeight" placeholder="e.g. 101.0" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-red-500">
             </div>
             <div>
               <label class="block text-xs font-semibold text-slate-400 mb-1">Smokes Avoided</label>
-              <input type="number" id="cigsAvoided" placeholder="e.g. 5 skipped" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 font-mono">
+              <input type="number" id="cigsAvoided" placeholder="e.g. 5 skipped" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-red-500">
             </div>
           </div>
 
-          <!-- Real File Upload Input -->
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Upload Photo (Camera or Gallery)</label>
-            <input type="file" id="mealPhotoFile" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 hover:file:bg-slate-700 cursor-pointer">
+            <input type="file" id="mealPhotoFile" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 hover:file:bg-slate-700 cursor-pointer">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Notes</label>
-            <textarea id="mealNotes" rows="2" placeholder="Satisfied on OMAD. Smoke craving passed in 3 mins!" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100"></textarea>
+            <textarea id="mealNotes" rows="2" placeholder="Felt great! Smoke craving passed in 3 mins." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-red-500"></textarea>
           </div>
-          <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-2.5 rounded-lg text-xs shadow-lg">Save & Post to Feed</button>
+          <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Save & Post to Feed</button>
         </form>
       </div>
     </div>
 
     <!-- TAB 3: STATS -->
     <div id="tab-stats" class="tab-content hidden space-y-4">
-      <div class="card-gradient rounded-xl p-4 shadow-xl space-y-3">
+      <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-3">
         <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
           <i class="fa-solid fa-chart-line text-amber-500"></i> Target: Sub-80kg Progress
         </h2>
-        <div class="w-full h-56 bg-slate-950/60 p-2 rounded-lg border border-slate-800">
+        <div class="w-full h-56 bg-slate-950/60 p-2 rounded-xl border border-slate-800">
           <canvas id="weightChart"></canvas>
         </div>
       </div>
@@ -145,7 +160,7 @@
 
     <!-- TAB 4: SODA DETOX -->
     <div id="tab-detox" class="tab-content hidden space-y-4">
-      <div class="card-gradient rounded-xl p-4 shadow-xl space-y-3">
+      <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-3">
         <h2 class="text-base font-bold text-slate-100"><i class="fa-solid fa-bottle-droplet text-cyan-400"></i> Soda & Water Hacks</h2>
         <p class="text-xs text-slate-300 leading-relaxed">Ice-cold salt water is your secret weapon against both sugar and smoking urges!</p>
       </div>
@@ -153,7 +168,7 @@
 
     <!-- TAB 5: HOLLANDAISE -->
     <div id="tab-recipes" class="tab-content hidden space-y-4">
-      <div class="card-gradient rounded-xl p-4 shadow-xl space-y-3">
+      <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-3">
         <h2 class="text-base font-bold text-slate-100"><i class="fa-solid fa-kitchen-set text-amber-400"></i> 2-Minute Hollandaise</h2>
         <p class="text-xs text-slate-300 leading-relaxed">Blend 2 yolks with 100g hot melted butter and salt for instant Mayo replacement!</p>
       </div>
@@ -163,40 +178,44 @@
 
   <!-- SUGAR SOS MODAL -->
   <div id="sugarSosModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-red-500 max-w-sm w-full rounded-xl p-5 space-y-3 glow-red">
+    <div class="bg-slate-900 border border-red-500 max-w-sm w-full rounded-2xl p-5 space-y-3 glow-sugar">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-        <h3 class="text-red-500 font-black text-base"><i class="fa-solid fa-triangle-exclamation"></i> SUGAR SOS</h3>
+        <h3 class="text-red-500 font-black text-base flex items-center gap-2">
+          <i class="fa-solid fa-bolt text-yellow-300 animate-bounce"></i> SUGAR CRAVING SOS
+        </h3>
         <button onclick="closeSOS('sugar')" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
-      <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs space-y-2">
+      <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2">
         <p class="font-bold text-amber-400">60-Second Action Plan:</p>
         <p class="text-slate-200">1. Drink 300ml <strong>ICE-COLD salt water</strong> immediately.</p>
         <p class="text-slate-200">2. Eat 1 bite of butter, bacon, or cold steak.</p>
         <p class="text-slate-200">3. Remind yourself: <strong>You are stronger than sugar!</strong></p>
       </div>
-      <button onclick="closeSOS('sugar')" class="w-full bg-red-600 text-white font-bold py-2 rounded-lg text-xs">I Got This!</button>
+      <button onclick="closeSOS('sugar')" class="w-full bg-red-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg">I Got This!</button>
     </div>
   </div>
 
   <!-- SMOKING SOS MODAL -->
   <div id="smokeSosModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-cyan-500 max-w-sm w-full rounded-xl p-5 space-y-3">
+    <div class="bg-slate-900 border border-cyan-500 max-w-sm w-full rounded-2xl p-5 space-y-3 glow-smoke">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-        <h3 class="text-cyan-400 font-black text-base"><i class="fa-solid fa-ban-smoking"></i> SMOKE SOS</h3>
+        <h3 class="text-cyan-400 font-black text-base flex items-center gap-2">
+          <i class="fa-solid fa-ban-smoking text-cyan-400"></i> SMOKE CRAVING SOS
+        </h3>
         <button onclick="closeSOS('smoke')" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
-      <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs space-y-2">
+      <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2">
         <p class="font-bold text-cyan-400">The 3-Minute Craving Reset:</p>
         <p class="text-slate-200">1. 🫁 <strong>Take 5 deep belly breaths</strong> (inhale 4s, hold 4s, exhale slowly).</p>
-        <p class="text-slate-200">2. 🧊 <strong>Drink 1 glass of ice-cold water</strong> to occupy your mouth and hands.</p>
+        <p class="text-slate-200">2. 🧊 <strong>Drink 1 glass of ice-cold water</strong> to occupy mouth and hands.</p>
         <p class="text-slate-200">3. ⏱️ <strong>Wait 3 minutes</strong> — nicotine cravings physically peak and vanish in under 5 mins!</p>
       </div>
-      <button onclick="closeSOS('smoke')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 rounded-lg text-xs">Craving Defeated!</button>
+      <button onclick="closeSOS('smoke')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg">Craving Defeated!</button>
     </div>
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 flex justify-around items-center p-2 z-40">
+  <nav class="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 flex justify-around items-center p-2 z-40 shadow-2xl">
     <button onclick="switchTab('feed')" id="nav-feed" class="nav-btn flex flex-col items-center text-red-400 text-xs py-1">
       <i class="fa-solid fa-users-viewfinder text-base"></i>
       <span class="text-[10px] mt-0.5 font-bold">Tribe</span>
@@ -253,7 +272,7 @@
 
     function completeChallenge() {
       const btn = document.getElementById('challengeBtn');
-      btn.className = 'bg-emerald-600 text-white font-bold text-[11px] px-3 py-2 rounded-lg';
+      btn.className = 'bg-emerald-600 text-white font-bold text-[11px] px-3 py-2 rounded-xl';
       btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Done (+50 pts)';
       alert('Challenge Completed!');
     }
@@ -296,20 +315,20 @@
 
       const feed = document.getElementById('socialFeedList');
       const post = document.createElement('div');
-      post.className = 'bg-slate-900 rounded-xl p-3.5 border border-slate-800 space-y-3 shadow-xl';
+      post.className = 'bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-3 shadow-xl';
       post.innerHTML = `
         <div class="flex justify-between items-center">
           <div class="flex items-center space-x-2.5">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs">YOU</div>
+            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs shadow">YOU</div>
             <div>
-              <span class="font-bold text-slate-200 text-xs">You (OMAD Warrior)</span>
+              <span class="font-bold text-slate-200 text-xs">You</span>
               <p class="text-[10px] text-slate-400">Just now</p>
             </div>
           </div>
           <span class="text-xs font-bold text-amber-400 font-mono">${weight.toFixed(1)} kg</span>
         </div>
         <p class="text-xs text-slate-300">${title}. ${notes}</p>
-        <img src="${photoUrl}" class="w-full h-48 object-cover rounded-lg border border-slate-800">
+        <img src="${photoUrl}" class="w-full h-48 object-cover rounded-xl border border-slate-800">
       `;
       feed.prepend(post);
 
