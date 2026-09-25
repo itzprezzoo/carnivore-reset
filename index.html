@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carnivore Reset & Health Tracker</title>
+  <title>Carnivore Reset & Fitness App</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,41 +17,110 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-24 md:pb-0">
 
+  <!-- ONBOARDING MODAL / WELCOME SCREEN -->
+  <div id="onboardingModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 max-w-md w-full rounded-2xl p-6 space-y-5 shadow-2xl">
+      <div class="text-center space-y-2">
+        <div class="inline-flex bg-gradient-to-br from-red-500 to-amber-500 text-slate-950 p-3 rounded-2xl font-black text-2xl shadow-lg">
+          <i class="fa-solid fa-drumstick-bite"></i>
+        </div>
+        <h2 class="text-xl font-black tracking-tight text-white">Welcome to Carnivore Reset</h2>
+        <p class="text-xs text-slate-400">Join now to start tracking your daily progress & compare stats with friends!</p>
+      </div>
+
+      <form id="onboardingForm" onsubmit="handleOnboarding(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name</label>
+          <input type="text" id="userNameInput" placeholder="e.g. Alex" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Current Weight (kg)</label>
+            <input type="number" step="0.1" id="userStartWeightInput" placeholder="e.g. 103" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Goal Weight (kg)</label>
+            <input type="number" step="0.1" id="userGoalWeightInput" placeholder="e.g. 79.9" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-amber-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Favorite Foods (for AI Recipe Generator)</label>
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
+            <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Beef" checked class="accent-amber-500"> 🥩 Beef / Steak
+            </label>
+            <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Lamb" checked class="accent-amber-500"> 🍖 Lamb
+            </label>
+            <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Eggs" checked class="accent-amber-500"> 🍳 Eggs / Dairy
+            </label>
+            <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Fish" checked class="accent-amber-500"> 🐟 Fish / Seafood
+            </label>
+            <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Bacon" class="accent-amber-500"> 🥓 Bacon
+            </label>
+            <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Chicken" class="accent-amber-500"> 🍗 Chicken
+            </label>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" id="isSmokerInput" class="w-4 h-4 accent-cyan-500 rounded">
+            <div>
+              <span class="text-xs font-bold text-slate-200">Are you currently trying to quit smoking?</span>
+              <p class="text-[10px] text-slate-400">Uncheck if you don't need the Cigarette Smoke SOS button.</p>
+            </div>
+          </label>
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wider shadow-lg">
+          Join & Start Tracking
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Sleek Top Header -->
-  <header class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800 p-3.5 sticky top-0 z-50 shadow-2xl">
-    <div class="max-w-xl mx-auto space-y-3">
+  <header class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800 p-3.5 sticky top-0 z-40 shadow-2xl">
+    <div class="max-w-xl mx-auto space-y-2.5">
       
       <!-- Top Branding Row -->
       <div class="flex justify-between items-center">
         <div class="flex items-center space-x-3">
-          <div class="bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 text-slate-950 p-2.5 rounded-2xl font-black text-xl shadow-lg shadow-red-900/40">
+          <div class="bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 text-slate-950 p-2 rounded-xl font-black text-lg shadow-lg">
             <i class="fa-solid fa-drumstick-bite"></i>
           </div>
           <div>
-            <h1 class="font-black text-lg tracking-tight bg-gradient-to-r from-red-400 via-amber-300 to-orange-400 bg-clip-text text-transparent">
+            <h1 class="font-black text-base tracking-tight bg-gradient-to-r from-red-400 via-amber-300 to-orange-400 bg-clip-text text-transparent">
               Carnivore Reset
             </h1>
-            <div class="flex items-center gap-2 mt-0.5">
-              <span class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-700">Day 2</span>
-              <span class="bg-amber-500/10 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/30">Target: &lt; 80kg</span>
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <span id="headerName" class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-700">Member</span>
+              <span id="headerTarget" class="bg-amber-500/10 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/30">Target: &lt; 80kg</span>
             </div>
           </div>
         </div>
 
         <div class="text-right">
-          <span class="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider">Start Weight</span>
-          <p class="text-xs font-bold text-slate-200 font-mono">103.0 kg</p>
+          <span class="text-[9px] uppercase font-extrabold text-slate-400 tracking-wider">Start Weight</span>
+          <p id="headerStartWeight" class="text-xs font-bold text-slate-200 font-mono">103.0 kg</p>
         </div>
       </div>
 
-      <!-- High-Impact SOS Button Bar -->
-      <div class="grid grid-cols-2 gap-2.5 pt-1">
-        <button onclick="openSOS('sugar')" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-lg glow-sugar transition active:scale-95">
+      <!-- Conditional SOS Button Bar -->
+      <div id="sosButtonBar" class="grid grid-cols-1 gap-2 pt-1">
+        <button onclick="openSOS('sugar')" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 shadow-lg glow-sugar transition active:scale-95">
           <i class="fa-solid fa-bolt text-yellow-300 animate-pulse text-sm"></i>
           <span>SUGAR SOS</span>
         </button>
 
-        <button onclick="openSOS('smoke')" class="bg-gradient-to-r from-slate-800 to-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/40 font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-lg glow-smoke transition active:scale-95">
+        <button id="smokeSosBtn" onclick="openSOS('smoke')" class="hidden bg-gradient-to-r from-slate-800 to-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/40 font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 shadow-lg glow-smoke transition active:scale-95">
           <i class="fa-solid fa-ban-smoking text-cyan-400 text-sm"></i>
           <span>SMOKE SOS</span>
         </button>
@@ -83,29 +152,7 @@
     <!-- TAB 1: TRIBE FEED -->
     <div id="tab-feed" class="tab-content space-y-4">
       <div id="socialFeedList" class="space-y-4">
-        <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-3 shadow-xl">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-2.5">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs shadow">YOU</div>
-              <div>
-                <div class="flex items-center gap-1.5">
-                  <span class="font-bold text-slate-200 text-xs">You</span>
-                  <span class="text-[9px] bg-red-950 text-red-400 border border-red-800/60 px-1.5 py-0.5 rounded-full font-bold">Day 2</span>
-                </div>
-                <span class="text-[10px] text-slate-400">Target: Sub-80kg</span>
-              </div>
-            </div>
-            <span class="text-xs font-bold text-amber-400 font-mono">101.5 kg</span>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">Back on the carnivore journey! Small sirloin steak + fried eggs in butter. Defeated soda and smoke cravings today! 🥩🍳</p>
-          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Steak and eggs" class="w-full h-48 object-cover rounded-xl border border-slate-800">
-          <div class="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800">
-            <button onclick="toggleLike(this)" class="flex items-center gap-1.5 hover:text-red-400 transition">
-              <i class="fa-regular fa-heart text-sm"></i> <span class="like-count">18 Support Likes</span>
-            </button>
-            <span class="text-[10px] text-slate-500"><i class="fa-solid fa-fire text-amber-500 mr-1"></i> Smoke Quit Legend</span>
-          </div>
-        </div>
+        <!-- Feed Items dynamically populated -->
       </div>
     </div>
 
@@ -117,17 +164,17 @@
         </h2>
         <form id="logForm" onsubmit="handleLogSubmit(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Meal Title</label>
-            <input type="text" id="mealTitle" placeholder="e.g. Small Sirloin + 2 Eggs" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-red-500">
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Meal Description</label>
+            <input type="text" id="mealTitle" placeholder="e.g. Small Sirloin + 2 Eggs in Butter" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-red-500">
           </div>
           
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-400 mb-1">Weight (kg)</label>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Weight Today (kg)</label>
               <input type="number" step="0.1" id="currentWeight" placeholder="e.g. 101.0" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-red-500">
             </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-400 mb-1">Smokes Avoided</label>
+            <div id="cigsAvoidedContainer">
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Smokes Skipped</label>
               <input type="number" id="cigsAvoided" placeholder="e.g. 5 skipped" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-red-500">
             </div>
           </div>
@@ -138,19 +185,19 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Notes</label>
-            <textarea id="mealNotes" rows="2" placeholder="Felt great! Smoke craving passed in 3 mins." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-red-500"></textarea>
+            <label class="block text-xs font-semibold text-slate-400 mb-1">Notes / Reflections</label>
+            <textarea id="mealNotes" rows="2" placeholder="Felt great after meal! Drink cold salt water." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-red-500"></textarea>
           </div>
-          <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Save & Post to Feed</button>
+          <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Save Entry & Update Feed</button>
         </form>
       </div>
     </div>
 
-    <!-- TAB 3: STATS -->
+    <!-- TAB 3: STATS & GRAPH -->
     <div id="tab-stats" class="tab-content hidden space-y-4">
       <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-3">
         <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
-          <i class="fa-solid fa-chart-line text-amber-500"></i> Target: Sub-80kg Progress
+          <i class="fa-solid fa-chart-line text-amber-500"></i> My Personal Progress Chart
         </h2>
         <div class="w-full h-56 bg-slate-950/60 p-2 rounded-xl border border-slate-800">
           <canvas id="weightChart"></canvas>
@@ -158,19 +205,55 @@
       </div>
     </div>
 
-    <!-- TAB 4: SODA DETOX -->
-    <div id="tab-detox" class="tab-content hidden space-y-4">
-      <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-3">
-        <h2 class="text-base font-bold text-slate-100"><i class="fa-solid fa-bottle-droplet text-cyan-400"></i> Soda & Water Hacks</h2>
-        <p class="text-xs text-slate-300 leading-relaxed">Ice-cold salt water is your secret weapon against both sugar and smoking urges!</p>
+    <!-- TAB 4: COMPARE TAB (SIDE BY SIDE STATS) -->
+    <div id="tab-compare" class="tab-content hidden space-y-4">
+      <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-4">
+        <div class="border-b border-slate-800 pb-2">
+          <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
+            <i class="fa-solid fa-scale-balanced text-amber-400"></i> Friends Weight Loss Leaderboard
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">Compare side-by-side progress and support each other!</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3" id="compareCards">
+          <!-- Dynamically filled with user and friend stats -->
+        </div>
       </div>
     </div>
 
-    <!-- TAB 5: HOLLANDAISE -->
+    <!-- TAB 5: AI RECIPES & CUSTOM RECIPES -->
     <div id="tab-recipes" class="tab-content hidden space-y-4">
-      <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-3">
-        <h2 class="text-base font-bold text-slate-100"><i class="fa-solid fa-kitchen-set text-amber-400"></i> 2-Minute Hollandaise</h2>
-        <p class="text-xs text-slate-300 leading-relaxed">Blend 2 yolks with 100g hot melted butter and salt for instant Mayo replacement!</p>
+      <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+          <div>
+            <h2 class="text-base font-bold text-slate-100 flex items-center gap-1.5">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Tailored Recipe Ideas
+            </h2>
+            <p class="text-[11px] text-slate-400">Recipes generated based on your selected favorite foods!</p>
+          </div>
+          <button onclick="generateRecipe()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold py-1.5 px-3 rounded-lg shadow">
+            <i class="fa-solid fa-rotate mr-1"></i> New Recipe
+          </button>
+        </div>
+
+        <!-- Dynamic AI Recipe Display -->
+        <div id="recipeCardDisplay" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5 text-xs">
+          <!-- Filled by JS -->
+        </div>
+
+        <!-- Add Custom Recipe Form -->
+        <div class="border-t border-slate-800 pt-3 space-y-2">
+          <h3 class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus-circle text-emerald-400"></i> Add Your Own Custom Recipe
+          </h3>
+          <form id="customRecipeForm" onsubmit="handleAddCustomRecipe(event)" class="space-y-2">
+            <input type="text" id="customRecipeTitle" placeholder="Recipe Title (e.g. My Quick Hollandaise Steak)" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
+            <textarea id="customRecipeInstructions" rows="2" placeholder="Ingredients & quick steps..." required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500"></textarea>
+            <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold py-2 rounded-lg text-xs border border-amber-500/30">
+              Save Custom Recipe
+            </button>
+          </form>
+        </div>
       </div>
     </div>
 
@@ -228,9 +311,9 @@
       <i class="fa-solid fa-chart-line text-base"></i>
       <span class="text-[10px] mt-0.5">Stats</span>
     </button>
-    <button onclick="switchTab('detox')" id="nav-detox" class="nav-btn flex flex-col items-center text-slate-400 text-xs py-1">
-      <i class="fa-solid fa-bottle-droplet text-base"></i>
-      <span class="text-[10px] mt-0.5">Soda</span>
+    <button onclick="switchTab('compare')" id="nav-compare" class="nav-btn flex flex-col items-center text-slate-400 text-xs py-1">
+      <i class="fa-solid fa-scale-balanced text-base"></i>
+      <span class="text-[10px] mt-0.5 font-bold">Compare</span>
     </button>
     <button onclick="switchTab('recipes')" id="nav-recipes" class="nav-btn flex flex-col items-center text-slate-400 text-xs py-1">
       <i class="fa-solid fa-utensils text-base"></i>
@@ -239,8 +322,72 @@
   </nav>
 
   <script>
+    let userData = {
+      name: 'User',
+      startWeight: 103.0,
+      currentWeight: 101.5,
+      goalWeight: 79.9,
+      isSmoker: false,
+      favFoods: ['Beef', 'Lamb', 'Eggs']
+    };
+
+    let friendData = {
+      name: 'Mate / Friend',
+      startWeight: 98.0,
+      currentWeight: 95.0,
+      goalWeight: 82.0,
+      isSmoker: true
+    };
+
+    let userLogs = [
+      { date: 'Start', weight: 103.0 },
+      { date: 'Day 2', weight: 101.5 }
+    ];
+
+    let customRecipes = [];
+
+    const recipeLibrary = [
+      { title: "2-Minute Blender Hollandaise", categories: ["Eggs", "Beef"], desc: "Blend 2 egg yolks with 100g hot melted butter and a pinch of salt until thick and creamy!" },
+      { title: "Pan-Seared Ribeye in Tallow", categories: ["Beef"], desc: "Sear a 300g ribeye on high heat in beef tallow for 3 mins each side. Top with butter salt." },
+      { title: "Slow-Cooked Buttered Lamb Cutlets", categories: ["Lamb"], desc: "Season lamb cutlets heavily with sea salt and sear in butter until crispy." },
+      { title: "Crispy Salmon Fillet with Butter Sauce", categories: ["Fish"], desc: "Pan-fry salmon skin-down for 4 mins until crispy, then baste with butter." }
+    ];
+
     let myChart = null;
-    let logs = [{ date: 'Start', weight: 103.0 }, { date: 'Day 2', weight: 101.5 }];
+
+    function handleOnboarding(e) {
+      e.preventDefault();
+      userData.name = document.getElementById('userNameInput').value;
+      userData.startWeight = parseFloat(document.getElementById('userStartWeightInput').value);
+      userData.currentWeight = userData.startWeight;
+      userData.goalWeight = parseFloat(document.getElementById('userGoalWeightInput').value);
+      userData.isSmoker = document.getElementById('isSmokerInput').checked;
+
+      const checkedFoods = document.querySelectorAll('input[name="favFood"]:checked');
+      userData.favFoods = Array.from(checkedFoods).map(cb => cb.value);
+
+      userLogs = [{ date: 'Start', weight: userData.startWeight }];
+
+      document.getElementById('headerName').innerText = userData.name;
+      document.getElementById('headerTarget').innerText = `Target: < ${userData.goalWeight}kg`;
+      document.getElementById('headerStartWeight').innerText = `${userData.startWeight.toFixed(1)} kg`;
+
+      if (userData.isSmoker) {
+        document.getElementById('smokeSosBtn').classList.remove('hidden');
+        document.getElementById('sosButtonBar').classList.remove('grid-cols-1');
+        document.getElementById('sosButtonBar').classList.add('grid-cols-2');
+      } else {
+        document.getElementById('smokeSosBtn').classList.add('hidden');
+        document.getElementById('sosButtonBar').classList.remove('grid-cols-2');
+        document.getElementById('sosButtonBar').classList.add('grid-cols-1');
+        document.getElementById('cigsAvoidedContainer').classList.add('hidden');
+      }
+
+      document.getElementById('onboardingModal').classList.add('hidden');
+      renderFeed();
+      renderCompare();
+      generateRecipe();
+    }
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -258,6 +405,7 @@
       }
 
       if(tabId === 'stats') setTimeout(initChart, 100);
+      if(tabId === 'compare') renderCompare();
     }
 
     function openSOS(type) {
@@ -277,16 +425,26 @@
       alert('Challenge Completed!');
     }
 
-    function toggleLike(btn) {
-      const icon = btn.querySelector('i');
-      const count = btn.querySelector('.like-count');
-      if (icon.classList.contains('fa-regular')) {
-        icon.className = 'fa-solid fa-heart text-red-500';
-        count.innerText = '19 Support Likes';
-      } else {
-        icon.className = 'fa-regular fa-heart';
-        count.innerText = '18 Support Likes';
-      }
+    function renderFeed() {
+      const feed = document.getElementById('socialFeedList');
+      feed.innerHTML = `
+        <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-3 shadow-xl">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs shadow">${userData.name.substring(0, 3).toUpperCase()}</div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-slate-200 text-xs">${userData.name}</span>
+                  <span class="text-[9px] bg-red-950 text-red-400 border border-red-800/60 px-1.5 py-0.5 rounded-full font-bold">Day 1</span>
+                </div>
+                <span class="text-[10px] text-slate-400">Target: Sub-${userData.goalWeight}kg</span>
+              </div>
+            </div>
+            <span class="text-xs font-bold text-amber-400 font-mono">${userData.currentWeight.toFixed(1)} kg</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">Joined the Carnivore Reset! Favourites selected: ${userData.favFoods.join(', ')}. Let's crush this!</p>
+        </div>
+      `;
     }
 
     function handleLogSubmit(e) {
@@ -295,6 +453,9 @@
       const weight = parseFloat(document.getElementById('currentWeight').value);
       const notes = document.getElementById('mealNotes').value;
       const photoFileInput = document.getElementById('mealPhotoFile');
+
+      userData.currentWeight = weight;
+      userLogs.push({ date: 'Today', weight: weight });
 
       let photoUrl = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80';
 
@@ -311,17 +472,15 @@
     }
 
     function saveAndPostLog(title, weight, notes, photoUrl) {
-      logs.push({ date: 'Today', weight: weight });
-
       const feed = document.getElementById('socialFeedList');
       const post = document.createElement('div');
       post.className = 'bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-3 shadow-xl';
       post.innerHTML = `
         <div class="flex justify-between items-center">
           <div class="flex items-center space-x-2.5">
-            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs shadow">YOU</div>
+            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs shadow">${userData.name.substring(0, 3).toUpperCase()}</div>
             <div>
-              <span class="font-bold text-slate-200 text-xs">You</span>
+              <span class="font-bold text-slate-200 text-xs">${userData.name}</span>
               <p class="text-[10px] text-slate-400">Just now</p>
             </div>
           </div>
@@ -332,9 +491,66 @@
       `;
       feed.prepend(post);
 
-      alert('Log saved with photo!');
+      alert('Log saved!');
       document.getElementById('logForm').reset();
       switchTab('feed');
+    }
+
+    function renderCompare() {
+      const container = document.getElementById('compareCards');
+      const userLoss = (userData.startWeight - userData.currentWeight).toFixed(1);
+      const friendLoss = (friendData.startWeight - friendData.currentWeight).toFixed(1);
+
+      container.innerHTML = `
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-amber-500/40 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-amber-400 text-xs">${userData.name} (You)</span>
+            <span class="text-xs font-bold font-mono text-emerald-400">-${userLoss} kg Loss</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-slate-300 pt-1">
+            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Start</span>${userData.startWeight} kg</div>
+            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Current</span>${userData.currentWeight} kg</div>
+            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Goal</span>${userData.goalWeight} kg</div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-slate-200 text-xs">${friendData.name}</span>
+            <span class="text-xs font-bold font-mono text-emerald-400">-${friendLoss} kg Loss</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-slate-300 pt-1">
+            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Start</span>${friendData.startWeight} kg</div>
+            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Current</span>${friendData.currentWeight} kg</div>
+            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Goal</span>${friendData.goalWeight} kg</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateRecipe() {
+      const filtered = recipeLibrary.filter(r => r.categories.some(cat => userData.favFoods.includes(cat)));
+      const selected = filtered.length > 0 ? filtered[Math.floor(Math.random() * filtered.length)] : recipeLibrary[0];
+      
+      const display = document.getElementById('recipeCardDisplay');
+      display.innerHTML = `
+        <div class="flex justify-between items-start">
+          <h4 class="font-bold text-slate-100 text-sm">${selected.title}</h4>
+          <span class="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded">Matched Favs</span>
+        </div>
+        <p class="text-slate-300 leading-relaxed">${selected.desc}</p>
+      `;
+    }
+
+    function handleAddCustomRecipe(e) {
+      e.preventDefault();
+      const title = document.getElementById('customRecipeTitle').value;
+      const desc = document.getElementById('customRecipeInstructions').value;
+
+      recipeLibrary.push({ title, categories: ["Custom"], desc });
+      alert('Custom Recipe Saved!');
+      document.getElementById('customRecipeForm').reset();
+      generateRecipe();
     }
 
     function initChart() {
@@ -343,14 +559,12 @@
       myChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: logs.map(l => l.date),
-          datasets: [{ label: 'Weight (kg)', data: logs.map(l => l.weight), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true }]
+          labels: userLogs.map(l => l.date),
+          datasets: [{ label: 'Weight (kg)', data: userLogs.map(l => l.weight), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true }]
         },
         options: { responsive: true, maintainAspectRatio: false }
       });
     }
-
-    switchTab('feed');
   </script>
 </body>
 </html>
