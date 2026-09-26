@@ -7,6 +7,11 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase Compat SDKs for single-file web app -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
   <style>
     body { background-color: #0b0f19; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
     .card-gradient { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; }
@@ -17,15 +22,15 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-24 md:pb-0">
 
-  <!-- ONBOARDING MODAL / WELCOME SCREEN -->
+  <!-- ONBOARDING MODAL -->
   <div id="onboardingModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 max-w-md w-full rounded-2xl p-6 space-y-5 shadow-2xl">
       <div class="text-center space-y-2">
         <div class="inline-flex bg-gradient-to-br from-red-500 to-amber-500 text-slate-950 p-3 rounded-2xl font-black text-2xl shadow-lg">
           <i class="fa-solid fa-drumstick-bite"></i>
         </div>
-        <h2 class="text-xl font-black tracking-tight text-white">Welcome to Carnivore Reset</h2>
-        <p class="text-xs text-slate-400">Join now to start tracking your daily progress & compare stats with friends!</p>
+        <h2 class="text-xl font-black tracking-tight text-white">Join Carnivore Reset</h2>
+        <p class="text-xs text-slate-400">Join the live tribe to sync stats and compare with friends!</p>
       </div>
 
       <form id="onboardingForm" onsubmit="handleOnboarding(event)" class="space-y-3.5">
@@ -46,7 +51,7 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Favorite Foods (for AI Recipe Generator)</label>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Favorite Foods (for Recipe Generator)</label>
           <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
             <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-lg border border-slate-800 cursor-pointer">
               <input type="checkbox" name="favFood" value="Beef" checked class="accent-amber-500"> 🥩 Beef / Steak
@@ -73,33 +78,29 @@
           <label class="flex items-center gap-2.5 cursor-pointer">
             <input type="checkbox" id="isSmokerInput" class="w-4 h-4 accent-cyan-500 rounded">
             <div>
-              <span class="text-xs font-bold text-slate-200">Are you currently trying to quit smoking?</span>
-              <p class="text-[10px] text-slate-400">Uncheck if you don't need the Cigarette Smoke SOS button.</p>
+              <span class="text-xs font-bold text-slate-200">Are you trying to quit smoking?</span>
+              <p class="text-[10px] text-slate-400">Uncheck if you don't need the Smoke SOS button.</p>
             </div>
           </label>
         </div>
 
         <button type="submit" class="w-full bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wider shadow-lg">
-          Join & Start Tracking
+          Join & Sync Stats Live
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Sleek Top Header -->
+  <!-- Header -->
   <header class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800 p-3.5 sticky top-0 z-40 shadow-2xl">
     <div class="max-w-xl mx-auto space-y-2.5">
-      
-      <!-- Top Branding Row -->
       <div class="flex justify-between items-center">
         <div class="flex items-center space-x-3">
           <div class="bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 text-slate-950 p-2 rounded-xl font-black text-lg shadow-lg">
             <i class="fa-solid fa-drumstick-bite"></i>
           </div>
           <div>
-            <h1 class="font-black text-base tracking-tight bg-gradient-to-r from-red-400 via-amber-300 to-orange-400 bg-clip-text text-transparent">
-              Carnivore Reset
-            </h1>
+            <h1 class="font-black text-base tracking-tight bg-gradient-to-r from-red-400 via-amber-300 to-orange-400 bg-clip-text text-transparent">Carnivore Reset</h1>
             <div class="flex items-center gap-1.5 mt-0.5">
               <span id="headerName" class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-slate-700">Member</span>
               <span id="headerTarget" class="bg-amber-500/10 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/30">Target: &lt; 80kg</span>
@@ -116,7 +117,7 @@
         </div>
       </div>
 
-      <!-- Conditional SOS Button Bar -->
+      <!-- SOS Bar -->
       <div id="sosButtonBar" class="grid grid-cols-1 gap-2 pt-1">
         <button onclick="openSOS('sugar')" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 shadow-lg glow-sugar transition active:scale-95">
           <i class="fa-solid fa-bolt text-yellow-300 animate-pulse text-sm"></i>
@@ -128,7 +129,6 @@
           <span>SMOKE SOS</span>
         </button>
       </div>
-
     </div>
   </header>
 
@@ -155,7 +155,7 @@
     <!-- TAB 1: TRIBE FEED -->
     <div id="tab-feed" class="tab-content space-y-4">
       <div id="socialFeedList" class="space-y-4">
-        <!-- Feed Items dynamically populated -->
+        <p class="text-xs text-slate-500 text-center py-4">Loading live tribe feed...</p>
       </div>
     </div>
 
@@ -183,24 +183,19 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Upload Photo (Camera or Gallery)</label>
-            <input type="file" id="mealPhotoFile" accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 hover:file:bg-slate-700 cursor-pointer">
-          </div>
-
-          <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Notes / Reflections</label>
             <textarea id="mealNotes" rows="2" placeholder="Felt great after meal! Drink cold salt water." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-red-500"></textarea>
           </div>
-          <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Save Entry & Update Feed</button>
+          <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-3 rounded-xl text-xs shadow-lg">Save & Post Live</button>
         </form>
       </div>
     </div>
 
-    <!-- TAB 3: STATS & GRAPH -->
+    <!-- TAB 3: STATS -->
     <div id="tab-stats" class="tab-content hidden space-y-4">
       <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-3">
         <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
-          <i class="fa-solid fa-chart-line text-amber-500"></i> My Personal Progress Chart
+          <i class="fa-solid fa-chart-line text-amber-500"></i> My Weight Progress Chart
         </h2>
         <div class="w-full h-56 bg-slate-950/60 p-2 rounded-xl border border-slate-800">
           <canvas id="weightChart"></canvas>
@@ -213,13 +208,13 @@
       <div class="card-gradient rounded-2xl p-4 shadow-xl space-y-4">
         <div class="border-b border-slate-800 pb-2">
           <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
-            <i class="fa-solid fa-scale-balanced text-amber-400"></i> Friends Weight Loss Leaderboard
+            <i class="fa-solid fa-scale-balanced text-amber-400"></i> Live Friends Leaderboard
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Compare side-by-side progress and support each other!</p>
+          <p class="text-xs text-slate-400 mt-0.5">Real-time side-by-side progress of everyone who joined!</p>
         </div>
 
         <div class="grid grid-cols-1 gap-3" id="compareCards">
-          <!-- Dynamically filled with user and friend stats -->
+          <p class="text-xs text-slate-500 text-center py-4">Fetching live members...</p>
         </div>
       </div>
     </div>
@@ -232,19 +227,17 @@
             <h2 class="text-base font-bold text-slate-100 flex items-center gap-1.5">
               <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Tailored Recipe Ideas
             </h2>
-            <p class="text-[11px] text-slate-400">Recipes generated based on your selected favorite foods!</p>
+            <p class="text-[11px] text-slate-400">Recipes generated based on your favorite foods!</p>
           </div>
           <button onclick="generateRecipe()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold py-1.5 px-3 rounded-lg shadow">
             <i class="fa-solid fa-rotate mr-1"></i> New Recipe
           </button>
         </div>
 
-        <!-- Dynamic AI Recipe Display -->
         <div id="recipeCardDisplay" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5 text-xs">
           <!-- Filled by JS -->
         </div>
 
-        <!-- Add Custom Recipe Form -->
         <div class="border-t border-slate-800 pt-3 space-y-2">
           <h3 class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
             <i class="fa-solid fa-plus-circle text-emerald-400"></i> Add Your Own Custom Recipe
@@ -262,41 +255,20 @@
 
   </main>
 
-  <!-- SUGAR SOS MODAL -->
+  <!-- SOS MODALS -->
   <div id="sugarSosModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-red-500 max-w-sm w-full rounded-2xl p-5 space-y-3 glow-sugar">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-        <h3 class="text-red-500 font-black text-base flex items-center gap-2">
-          <i class="fa-solid fa-bolt text-yellow-300 animate-bounce"></i> SUGAR CRAVING SOS
-        </h3>
-        <button onclick="closeSOS('sugar')" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2">
-        <p class="font-bold text-amber-400">60-Second Action Plan:</p>
-        <p class="text-slate-200">1. Drink 300ml <strong>ICE-COLD salt water</strong> immediately.</p>
-        <p class="text-slate-200">2. Eat 1 bite of butter, bacon, or cold steak.</p>
-        <p class="text-slate-200">3. Remind yourself: <strong>You are stronger than sugar!</strong></p>
-      </div>
-      <button onclick="closeSOS('sugar')" class="w-full bg-red-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg">I Got This!</button>
+      <h3 class="text-red-500 font-black text-base"><i class="fa-solid fa-bolt text-yellow-300"></i> SUGAR SOS</h3>
+      <p class="text-xs text-slate-200">Drink 300ml <strong>ICE-COLD salt water</strong> immediately!</p>
+      <button onclick="closeSOS('sugar')" class="w-full bg-red-600 text-white font-bold py-2 rounded-xl text-xs">I Got This!</button>
     </div>
   </div>
 
-  <!-- SMOKING SOS MODAL -->
   <div id="smokeSosModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-cyan-500 max-w-sm w-full rounded-2xl p-5 space-y-3 glow-smoke">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-        <h3 class="text-cyan-400 font-black text-base flex items-center gap-2">
-          <i class="fa-solid fa-ban-smoking text-cyan-400"></i> SMOKE CRAVING SOS
-        </h3>
-        <button onclick="closeSOS('smoke')" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs space-y-2">
-        <p class="font-bold text-cyan-400">The 3-Minute Craving Reset:</p>
-        <p class="text-slate-200">1. 🫁 <strong>Take 5 deep belly breaths</strong> (inhale 4s, hold 4s, exhale slowly).</p>
-        <p class="text-slate-200">2. 🧊 <strong>Drink 1 glass of ice-cold water</strong> to occupy mouth and hands.</p>
-        <p class="text-slate-200">3. ⏱️ <strong>Wait 3 minutes</strong> — nicotine cravings physically peak and vanish in under 5 mins!</p>
-      </div>
-      <button onclick="closeSOS('smoke')" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg">Craving Defeated!</button>
+      <h3 class="text-cyan-400 font-black text-base"><i class="fa-solid fa-ban-smoking"></i> SMOKE SOS</h3>
+      <p class="text-xs text-slate-200">Take 5 deep belly breaths & drink ice water. Craving vanishes in 3 mins!</p>
+      <button onclick="closeSOS('smoke')" class="w-full bg-cyan-600 text-white font-bold py-2 rounded-xl text-xs">Craving Defeated!</button>
     </div>
   </div>
 
@@ -325,22 +297,22 @@
   </nav>
 
   <script>
-    let userData = {
-      name: 'User',
-      startWeight: 103.0,
-      currentWeight: 101.5,
-      goalWeight: 79.9,
-      isSmoker: false,
-      favFoods: ['Beef', 'Lamb', 'Eggs']
+    // YOUR EXACT FIREBASE CREDENTIALS
+    const firebaseConfig = {
+      apiKey: "AIzaSyDY9h1FtUn4M6xnIKZxMljpwtXSyYrN6S8",
+      authDomain: "carnivore-reset.firebaseapp.com",
+      projectId: "carnivore-reset",
+      storageBucket: "carnivore-reset.firebasestorage.app",
+      messagingSenderId: "828670355857",
+      appId: "1:828670355857:web:8074d991aef9f8019f5230"
     };
 
-    let friendData = {
-      name: 'Mate / Friend',
-      startWeight: 98.0,
-      currentWeight: 95.0,
-      goalWeight: 82.0,
-      isSmoker: true
-    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let userData = null;
+    let userId = localStorage.getItem('carnivore_user_id') || 'user_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('carnivore_user_id', userId);
 
     let userLogs = [];
     let myChart = null;
@@ -352,23 +324,43 @@
       { title: "Crispy Salmon Fillet with Butter Sauce", categories: ["Fish"], desc: "Pan-fry salmon skin-down for 4 mins until crispy, then baste with butter." }
     ];
 
-    // Load saved data on startup
     window.addEventListener('DOMContentLoaded', () => {
-      const savedUser = localStorage.getItem('carnivore_user_profile');
-      const savedLogs = localStorage.getItem('carnivore_user_logs');
+      db.collection('users').doc(userId).get().then(doc => {
+        if (doc.exists) {
+          userData = doc.data();
+          applyProfile();
+          document.getElementById('onboardingModal').classList.add('hidden');
+        } else {
+          document.getElementById('onboardingModal').classList.remove('hidden');
+        }
+      });
 
-      if (savedUser) {
-        userData = JSON.parse(savedUser);
-        if (savedLogs) userLogs = JSON.parse(savedLogs);
-
-        applyLoadedProfile();
-        document.getElementById('onboardingModal').classList.add('hidden');
-      } else {
-        document.getElementById('onboardingModal').classList.remove('hidden');
-      }
+      listenToLiveTribe();
     });
 
-    function applyLoadedProfile() {
+    function handleOnboarding(e) {
+      e.preventDefault();
+      const checkedFoods = document.querySelectorAll('input[name="favFood"]:checked');
+      const favFoodsList = Array.from(checkedFoods).map(cb => cb.value);
+
+      userData = {
+        id: userId,
+        name: document.getElementById('userNameInput').value,
+        startWeight: parseFloat(document.getElementById('userStartWeightInput').value),
+        currentWeight: parseFloat(document.getElementById('userStartWeightInput').value),
+        goalWeight: parseFloat(document.getElementById('userGoalWeightInput').value),
+        isSmoker: document.getElementById('isSmokerInput').checked,
+        favFoods: favFoodsList,
+        joinedAt: new Date().toISOString()
+      };
+
+      db.collection('users').doc(userId).set(userData).then(() => {
+        applyProfile();
+        document.getElementById('onboardingModal').classList.add('hidden');
+      });
+    }
+
+    function applyProfile() {
       document.getElementById('headerName').innerText = userData.name;
       document.getElementById('headerTarget').innerText = `Target: < ${userData.goalWeight}kg`;
       document.getElementById('headerStartWeight').innerText = `${userData.startWeight.toFixed(1)} kg`;
@@ -385,96 +377,7 @@
         document.getElementById('cigsAvoidedContainer').classList.add('hidden');
       }
 
-      renderFeed();
-      renderCompare();
       generateRecipe();
-    }
-
-    function handleOnboarding(e) {
-      e.preventDefault();
-      userData.name = document.getElementById('userNameInput').value;
-      userData.startWeight = parseFloat(document.getElementById('userStartWeightInput').value);
-      userData.currentWeight = userData.startWeight;
-      userData.goalWeight = parseFloat(document.getElementById('userGoalWeightInput').value);
-      userData.isSmoker = document.getElementById('isSmokerInput').checked;
-
-      const checkedFoods = document.querySelectorAll('input[name="favFood"]:checked');
-      userData.favFoods = Array.from(checkedFoods).map(cb => cb.value);
-
-      userLogs = [{ date: 'Start', weight: userData.startWeight }];
-
-      // Save to localStorage
-      localStorage.setItem('carnivore_user_profile', JSON.stringify(userData));
-      localStorage.setItem('carnivore_user_logs', JSON.stringify(userLogs));
-
-      applyLoadedProfile();
-      document.getElementById('onboardingModal').classList.add('hidden');
-    }
-
-    function resetProfileData() {
-      if (confirm("Reset your profile and start fresh?")) {
-        localStorage.removeItem('carnivore_user_profile');
-        localStorage.removeItem('carnivore_user_logs');
-        location.reload();
-      }
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('text-red-400', 'font-bold');
-        btn.classList.add('text-slate-400');
-      });
-
-      const activeNav = document.getElementById(`nav-${tabId}`);
-      if(activeNav) {
-        activeNav.classList.remove('text-slate-400');
-        activeNav.classList.add('text-red-400', 'font-bold');
-      }
-
-      if(tabId === 'stats') setTimeout(initChart, 100);
-      if(tabId === 'compare') renderCompare();
-    }
-
-    function openSOS(type) {
-      if(type === 'sugar') document.getElementById('sugarSosModal').classList.remove('hidden');
-      if(type === 'smoke') document.getElementById('smokeSosModal').classList.remove('hidden');
-    }
-
-    function closeSOS(type) {
-      if(type === 'sugar') document.getElementById('sugarSosModal').classList.add('hidden');
-      if(type === 'smoke') document.getElementById('smokeSosModal').classList.add('hidden');
-    }
-
-    function completeChallenge() {
-      const btn = document.getElementById('challengeBtn');
-      btn.className = 'bg-emerald-600 text-white font-bold text-[11px] px-3 py-2 rounded-xl';
-      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Done (+50 pts)';
-      alert('Challenge Completed!');
-    }
-
-    function renderFeed() {
-      const feed = document.getElementById('socialFeedList');
-      feed.innerHTML = `
-        <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-3 shadow-xl">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-2.5">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs shadow">${userData.name.substring(0, 3).toUpperCase()}</div>
-              <div>
-                <div class="flex items-center gap-1.5">
-                  <span class="font-bold text-slate-200 text-xs">${userData.name}</span>
-                  <span class="text-[9px] bg-red-950 text-red-400 border border-red-800/60 px-1.5 py-0.5 rounded-full font-bold">Active</span>
-                </div>
-                <span class="text-[10px] text-slate-400">Target: Sub-${userData.goalWeight}kg</span>
-              </div>
-            </div>
-            <span class="text-xs font-bold text-amber-400 font-mono">${userData.currentWeight.toFixed(1)} kg</span>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">Tracking active on Carnivore Reset! Favourites selected: ${userData.favFoods.join(', ')}.</p>
-        </div>
-      `;
     }
 
     function handleLogSubmit(e) {
@@ -482,87 +385,74 @@
       const title = document.getElementById('mealTitle').value;
       const weight = parseFloat(document.getElementById('currentWeight').value);
       const notes = document.getElementById('mealNotes').value;
-      const photoFileInput = document.getElementById('mealPhotoFile');
 
       userData.currentWeight = weight;
       userLogs.push({ date: 'Today', weight: weight });
 
-      localStorage.setItem('carnivore_user_profile', JSON.stringify(userData));
-      localStorage.setItem('carnivore_user_logs', JSON.stringify(userLogs));
+      // Update user weight in DB
+      db.collection('users').doc(userId).update({ currentWeight: weight });
 
-      let photoUrl = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80';
-
-      if (photoFileInput.files && photoFileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          photoUrl = e.target.result;
-          saveAndPostLog(title, weight, notes, photoUrl);
-        }
-        reader.readAsDataURL(photoFileInput.files[0]);
-      } else {
-        saveAndPostLog(title, weight, notes, photoUrl);
-      }
+      // Post to live tribe feed in DB
+      db.collection('posts').add({
+        userName: userData.name,
+        userId: userId,
+        title: title,
+        weight: weight,
+        notes: notes,
+        createdAt: new Date().toISOString()
+      }).then(() => {
+        alert('Log shared live to the tribe!');
+        document.getElementById('logForm').reset();
+        switchTab('feed');
+      });
     }
 
-    function saveAndPostLog(title, weight, notes, photoUrl) {
-      const feed = document.getElementById('socialFeedList');
-      const post = document.createElement('div');
-      post.className = 'bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-3 shadow-xl';
-      post.innerHTML = `
-        <div class="flex justify-between items-center">
-          <div class="flex items-center space-x-2.5">
-            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-red-500 flex items-center justify-center text-slate-950 font-black text-xs shadow">${userData.name.substring(0, 3).toUpperCase()}</div>
-            <div>
-              <span class="font-bold text-slate-200 text-xs">${userData.name}</span>
-              <p class="text-[10px] text-slate-400">Just now</p>
+    function listenToLiveTribe() {
+      // Live feed synchronization
+      db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+        const feed = document.getElementById('socialFeedList');
+        feed.innerHTML = '';
+        snapshot.forEach(doc => {
+          const post = doc.data();
+          feed.innerHTML += `
+            <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2 shadow-xl">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-slate-200 text-xs">${post.userName}</span>
+                <span class="text-xs font-bold text-amber-400 font-mono">${post.weight.toFixed(1)} kg</span>
+              </div>
+              <p class="text-xs text-slate-300">${post.title}. ${post.notes}</p>
             </div>
-          </div>
-          <span class="text-xs font-bold text-amber-400 font-mono">${weight.toFixed(1)} kg</span>
-        </div>
-        <p class="text-xs text-slate-300">${title}. ${notes}</p>
-        <img src="${photoUrl}" class="w-full h-48 object-cover rounded-xl border border-slate-800">
-      `;
-      feed.prepend(post);
+          `;
+        });
+      });
 
-      alert('Log saved!');
-      document.getElementById('logForm').reset();
-      switchTab('feed');
-    }
-
-    function renderCompare() {
-      const container = document.getElementById('compareCards');
-      const userLoss = (userData.startWeight - userData.currentWeight).toFixed(1);
-      const friendLoss = (friendData.startWeight - friendData.currentWeight).toFixed(1);
-
-      container.innerHTML = `
-        <div class="bg-slate-950 p-3.5 rounded-xl border border-amber-500/40 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-amber-400 text-xs">${userData.name} (You)</span>
-            <span class="text-xs font-bold font-mono text-emerald-400">-${userLoss} kg Loss</span>
-          </div>
-          <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-slate-300 pt-1">
-            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Start</span>${userData.startWeight} kg</div>
-            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Current</span>${userData.currentWeight} kg</div>
-            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Goal</span>${userData.goalWeight} kg</div>
-          </div>
-        </div>
-
-        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-slate-200 text-xs">${friendData.name}</span>
-            <span class="text-xs font-bold font-mono text-emerald-400">-${friendLoss} kg Loss</span>
-          </div>
-          <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-slate-300 pt-1">
-            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Start</span>${friendData.startWeight} kg</div>
-            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Current</span>${friendData.currentWeight} kg</div>
-            <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Goal</span>${friendData.goalWeight} kg</div>
-          </div>
-        </div>
-      `;
+      // Live leaderboard comparison synchronization
+      db.collection('users').onSnapshot(snapshot => {
+        const container = document.getElementById('compareCards');
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+          const user = doc.data();
+          const loss = (user.startWeight - user.currentWeight).toFixed(1);
+          container.innerHTML += `
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-slate-200 text-xs">${user.name} ${user.id === userId ? '(You)' : ''}</span>
+                <span class="text-xs font-bold font-mono text-emerald-400">-${loss} kg Loss</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-slate-300 pt-1">
+                <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Start</span>${user.startWeight} kg</div>
+                <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Current</span>${user.currentWeight} kg</div>
+                <div class="bg-slate-900 p-2 rounded-lg"><span class="text-slate-500 text-[9px] block">Goal</span>${user.goalWeight} kg</div>
+              </div>
+            </div>
+          `;
+        });
+      });
     }
 
     function generateRecipe() {
-      const filtered = recipeLibrary.filter(r => r.categories.some(cat => userData.favFoods.includes(cat)));
+      const favs = userData && userData.favFoods ? userData.favFoods : ["Beef", "Eggs"];
+      const filtered = recipeLibrary.filter(r => r.categories.some(cat => favs.includes(cat)));
       const selected = filtered.length > 0 ? filtered[Math.floor(Math.random() * filtered.length)] : recipeLibrary[0];
       
       const display = document.getElementById('recipeCardDisplay');
@@ -586,6 +476,49 @@
       generateRecipe();
     }
 
+    function resetProfileData() {
+      if (confirm("Reset profile?")) {
+        localStorage.removeItem('carnivore_user_id');
+        location.reload();
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-red-400', 'font-bold');
+        btn.classList.add('text-slate-400');
+      });
+
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if(activeNav) {
+        activeNav.classList.remove('text-slate-400');
+        activeNav.classList.add('text-red-400', 'font-bold');
+      }
+
+      if(tabId === 'stats') setTimeout(initChart, 100);
+      if(tabId === 'compare') listenToLiveTribe();
+    }
+
+    function openSOS(type) {
+      if(type === 'sugar') document.getElementById('sugarSosModal').classList.remove('hidden');
+      if(type === 'smoke') document.getElementById('smokeSosModal').classList.remove('hidden');
+    }
+
+    function closeSOS(type) {
+      if(type === 'sugar') document.getElementById('sugarSosModal').classList.add('hidden');
+      if(type === 'smoke') document.getElementById('smokeSosModal').classList.add('hidden');
+    }
+
+    function completeChallenge() {
+      const btn = document.getElementById('challengeBtn');
+      btn.className = 'bg-emerald-600 text-white font-bold text-[11px] px-3 py-2 rounded-xl';
+      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Done (+50 pts)';
+      alert('Challenge Completed!');
+    }
+
     function initChart() {
       const ctx = document.getElementById('weightChart').getContext('2d');
       if (myChart) myChart.destroy();
@@ -598,6 +531,8 @@
         options: { responsive: true, maintainAspectRatio: false }
       });
     }
+
+    switchTab('feed');
   </script>
 </body>
 </html>
