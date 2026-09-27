@@ -13,21 +13,21 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
   <style>
-    body { background-color: #070a12; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-    .card-gradient { background: linear-gradient(145deg, #131c2e 0%, #0a0f1d 100%); border: 1px solid #1e293b; }
-    .glow-sugar { box-shadow: 0 0 20px rgba(239, 68, 68, 0.45); }
-    .glow-smoke { box-shadow: 0 0 20px rgba(6, 182, 212, 0.35); }
-    .glow-gold { box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); }
-    .glow-card { box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8); }
+    body { background-color: #050811 !important; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .card-gradient { background: linear-gradient(145deg, #0f172a 0%, #070d19 100%); border: 1px solid #1e293b; }
+    .glow-sugar { box-shadow: 0 0 25px rgba(239, 68, 68, 0.5); }
+    .glow-smoke { box-shadow: 0 0 25px rgba(6, 182, 212, 0.4); }
+    .glow-gold { box-shadow: 0 0 25px rgba(245, 158, 11, 0.3); }
+    .glow-card { box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.9); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-24 md:pb-0">
 
   <!-- ONBOARDING MODAL -->
   <div id="onboardingModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/30 max-w-md w-full rounded-3xl p-6 space-y-5 shadow-2xl glow-gold">
+    <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/40 max-w-md w-full rounded-3xl p-6 space-y-5 shadow-2xl glow-gold">
       <div class="text-center space-y-2">
-        <div class="inline-flex bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 text-slate-950 p-4 rounded-3xl font-black text-3xl shadow-xl shadow-red-950/50 animate-bounce">
+        <div class="inline-flex bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 text-slate-950 p-4 rounded-3xl font-black text-3xl shadow-xl shadow-red-950/50">
           <i class="fa-solid fa-fire-flame-curved"></i>
         </div>
         <h2 class="text-2xl font-black tracking-tight text-white bg-gradient-to-r from-red-400 via-amber-300 to-orange-400 bg-clip-text text-transparent">Carnivore Reset</h2>
@@ -85,7 +85,7 @@
           </label>
         </div>
 
-        <button type="submit" class="w-full bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 hover:from-red-600 hover:to-amber-600 text-slate-950 font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-xl transition active:scale-95">
+        <button type="submit" class="w-full bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 text-slate-950 font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-xl transition active:scale-95">
           Join & Sync Live
         </button>
       </form>
@@ -120,12 +120,12 @@
 
       <!-- SOS Bar -->
       <div id="sosButtonBar" class="grid grid-cols-1 gap-2 pt-1">
-        <button onclick="openSOS('sugar')" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-lg glow-sugar transition active:scale-95">
+        <button onclick="openSOS('sugar')" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-lg glow-sugar transition active:scale-95">
           <i class="fa-solid fa-bolt text-yellow-300 animate-pulse text-sm"></i>
           <span>SUGAR SOS</span>
         </button>
 
-        <button id="smokeSosBtn" onclick="openSOS('smoke')" class="hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/40 font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-between gap-2 shadow-lg glow-smoke transition active:scale-95">
+        <button id="smokeSosBtn" onclick="openSOS('smoke')" class="hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-cyan-400 border border-cyan-500/40 font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-between gap-2 shadow-lg glow-smoke transition active:scale-95">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-ban-smoking text-cyan-400 text-sm"></i>
             <span>SMOKE SOS</span>
@@ -140,7 +140,7 @@
   <main class="max-w-xl mx-auto w-full p-3.5 flex-1 space-y-4">
 
     <!-- Challenge Card -->
-    <div class="bg-gradient-to-r from-amber-950/60 via-slate-900 to-slate-900 border border-amber-500/40 rounded-3xl p-4 flex items-center justify-between gap-3 shadow-xl glow-gold">
+    <div class="bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-900 border border-amber-500/50 rounded-3xl p-4 flex items-center justify-between gap-3 shadow-xl glow-gold">
       <div class="flex items-start gap-3">
         <div class="bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 rounded-2xl text-slate-950 font-black shrink-0 shadow-lg">
           <i class="fa-solid fa-trophy text-lg"></i>
@@ -151,7 +151,7 @@
           <p class="text-[11px] text-slate-400 mt-0.5">Drink 500ml ice water with sea salt when cravings strike!</p>
         </div>
       </div>
-      <button onclick="completeChallenge()" id="challengeBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-[11px] px-3.5 py-2.5 rounded-2xl whitespace-nowrap shadow-lg shrink-0 transition active:scale-95">
+      <button onclick="completeChallenge()" id="challengeBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold text-[11px] px-3.5 py-2.5 rounded-2xl whitespace-nowrap shadow-lg shrink-0 transition active:scale-95">
         <i class="fa-solid fa-check-circle mr-1"></i> Done (+50 pts)
       </button>
     </div>
@@ -182,14 +182,14 @@
 
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Meal Photo (Camera or Gallery)</label>
-            <input type="file" id="mealPhotoInput" accept="image/*" class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-2.5 text-xs text-slate-300 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 hover:file:bg-slate-700 cursor-pointer">
+            <input type="file" id="mealPhotoInput" accept="image/*" class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-2.5 text-xs text-slate-300 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 cursor-pointer">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Notes / Reflections</label>
             <textarea id="mealNotes" rows="2" placeholder="Felt great after meal! Drink cold salt water." class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 focus:outline-none focus:border-red-500"></textarea>
           </div>
-          <button type="submit" id="saveLogBtn" class="w-full bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-bold py-3.5 rounded-2xl text-xs shadow-xl flex items-center justify-center gap-2 transition active:scale-95">
+          <button type="submit" id="saveLogBtn" class="w-full bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-xl flex items-center justify-center gap-2 transition active:scale-95">
             <span>Save & Post Live</span>
           </button>
         </form>
@@ -262,7 +262,7 @@
 
   <!-- USER PROFILE / DIARY PROGRESS MODAL -->
   <div id="userProfileModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-amber-500/30 max-w-md w-full rounded-3xl p-5 space-y-4 max-h-[85vh] flex flex-col glow-gold">
+    <div class="bg-slate-900 border border-amber-500/40 max-w-md w-full rounded-3xl p-5 space-y-4 max-h-[85vh] flex flex-col glow-gold">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <div>
           <h3 id="profileModalTitle" class="font-black text-slate-100 text-base">Friend Profile</h3>
@@ -284,7 +284,7 @@
     <div class="bg-slate-900 border border-red-500 max-w-sm w-full rounded-3xl p-5 space-y-3 glow-sugar">
       <h3 class="text-red-500 font-black text-base flex items-center gap-2"><i class="fa-solid fa-bolt text-yellow-300"></i> SUGAR SOS</h3>
       <p class="text-xs text-slate-200">Drink 300ml <strong>ICE-COLD salt water</strong> immediately!</p>
-      <button onclick="closeSOS('sugar')" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg">I Got This!</button>
+      <button onclick="closeSOS('sugar')" class="w-full bg-red-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg">I Got This!</button>
     </div>
   </div>
 
@@ -309,12 +309,12 @@
           <span>Today's Cigarettes Logged:</span>
           <span id="modalSmokeCount" class="font-mono font-bold text-cyan-400">0</span>
         </div>
-        <button onclick="logCigarette()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3 rounded-2xl text-xs shadow-lg flex items-center justify-center gap-2">
+        <button onclick="logCigarette()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-lg flex items-center justify-center gap-2">
           <i class="fa-solid fa-plus-circle"></i> Log 1 Cigarette
         </button>
       </div>
 
-      <button onclick="closeSOS('smoke')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-2xl text-xs">
+      <button onclick="closeSOS('smoke')" class="w-full bg-slate-800 text-slate-300 font-bold py-2.5 rounded-2xl text-xs">
         Close / Craving Resisted
       </button>
     </div>
@@ -542,7 +542,7 @@
             <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl p-4 border border-slate-800 space-y-3 shadow-2xl glow-card">
               <div class="flex justify-between items-start">
                 <div class="flex items-center space-x-2.5">
-                  <button onclick="viewUserProfile('${post.userId}', '${post.userName}')" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-500 via-orange-500 to-amber-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-lg hover:scale-105 transition">
+                  <button onclick="viewUserProfile('${post.userId}', '${post.userName}')" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-500 via-orange-500 to-amber-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-lg">
                     ${post.userName.substring(0, 3).toUpperCase()}
                   </button>
                   <div>
@@ -566,7 +566,7 @@
 
                 <form onsubmit="handleCommentSubmit(event, '${postId}')" class="flex gap-2 pt-1">
                   <input type="text" id="comment-input-${postId}" placeholder="Write a comment..." required class="flex-1 bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
-                  <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold px-3.5 py-2 rounded-xl text-xs shadow transition active:scale-95">
+                  <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold px-3.5 py-2 rounded-xl text-xs shadow transition active:scale-95">
                     Post
                   </button>
                 </form>
