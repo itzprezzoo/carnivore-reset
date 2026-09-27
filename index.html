@@ -65,14 +65,6 @@
         <p class="text-xs text-stone-600 font-semibold">Join the live lodge feed to track progress & compete!</p>
       </div>
 
-      <!-- Banner -->
-      <div class="relative h-28 rounded-2xl overflow-hidden border-2 border-amber-900/40">
-        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Pan-seared Steak & Eggs" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/30 to-transparent flex items-end p-2.5">
-          <span class="text-[11px] font-bold text-amber-200 uppercase tracking-wide"><i class="fa-solid fa-fire mr-1"></i> Steak & Sunny Eggs Fuel</span>
-        </div>
-      </div>
-
       <form id="onboardingForm" onsubmit="handleOnboarding(event)" class="space-y-3.5">
         <div>
           <label class="block text-xs font-bold text-stone-800 mb-1">Camper Name</label>
@@ -157,14 +149,19 @@
         </div>
       </div>
 
-      <!-- Steak & Sunny Side Up Eggs Banner -->
-      <div class="relative h-24 rounded-2xl overflow-hidden border border-amber-800/50 shadow-md">
-        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Pan-seared Steak with Eggs" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent flex items-end justify-between p-2.5">
-          <span class="text-[11px] font-bold text-amber-200 uppercase tracking-wide bg-stone-950/80 px-2 py-1 rounded-lg border border-amber-800/40">
-            🥩 Pan-Seared Steak & 🍳 Eggs Fuel
-          </span>
-          <span class="text-[10px] text-stone-300 font-semibold bg-stone-900/80 px-2 py-0.5 rounded-md">Zero-Carb Camp</span>
+      <!-- DYNAMIC DAILY RECIPE BANNER -->
+      <div class="relative h-28 rounded-2xl overflow-hidden border border-amber-800/50 shadow-md">
+        <img id="dailyRecipeImg" src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Daily Featured Meal" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent flex items-end justify-between p-2.5">
+          <div class="space-y-0.5 max-w-[70%]">
+            <span class="text-[9px] font-black uppercase text-amber-400 tracking-wider bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800/40">
+              <i class="fa-solid fa-utensils mr-1"></i> Recipe of the Day
+            </span>
+            <h3 id="dailyRecipeTitle" class="text-xs font-bold text-stone-100 truncate">Pan-Seared Ribeye & Sunny Eggs</h3>
+          </div>
+          <button onclick="openDailyRecipeModal()" class="btn-leather text-[10px] font-bold px-2.5 py-1.5 rounded-xl shadow-md border border-amber-700/50 whitespace-nowrap">
+            View Recipe &rarr;
+          </button>
         </div>
       </div>
 
@@ -299,6 +296,34 @@
 
   </main>
 
+  <!-- DAILY RECIPE POPUP MODAL -->
+  <div id="dailyRecipeModal" class="fixed inset-0 bg-stone-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="parchment-card max-w-md w-full rounded-3xl p-5 space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-center border-b border-stone-300 pb-2.5">
+        <span class="text-xs font-black uppercase text-amber-900 tracking-wider">
+          <i class="fa-solid fa-calendar-day mr-1"></i> Recipe of the Day
+        </span>
+        <button onclick="closeDailyRecipeModal()" class="text-stone-600 hover:text-stone-900 p-1">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 overflow-y-auto pr-1">
+        <h3 id="modalRecipeTitle" class="font-black font-heading text-stone-900 text-lg">Pan-Seared Ribeye & Sunny Eggs</h3>
+        <img id="modalRecipeImg" src="" class="w-full h-48 object-cover rounded-2xl border border-stone-400 shadow-md">
+        
+        <div class="bg-stone-100 p-3.5 rounded-2xl border border-stone-300 space-y-2 text-xs text-stone-800">
+          <p class="font-bold text-amber-900 uppercase tracking-wide">Preparation & Instructions:</p>
+          <p id="modalRecipeDesc" class="leading-relaxed">Instructions loading...</p>
+        </div>
+      </div>
+
+      <button onclick="closeDailyRecipeModal()" class="w-full btn-leather font-bold py-2.5 rounded-xl text-xs mt-1">
+        Close Recipe
+      </button>
+    </div>
+  </div>
+
   <!-- USER PROFILE / DIARY PROGRESS MODAL -->
   <div id="userProfileModal" class="fixed inset-0 bg-stone-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="parchment-card max-w-md w-full rounded-3xl p-5 space-y-4 max-h-[85vh] flex flex-col">
@@ -416,6 +441,56 @@
     let userLogs = [];
     let myChart = null;
 
+    // DAILY FEATURED RECIPES ROTATION
+    const dailyRecipeRotation = [
+      {
+        title: "Pan-Seared Ribeye & Sunny Eggs",
+        img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+        desc: "Sear a 300g ribeye steak on high heat in beef tallow for 3 minutes per side. Fry 2 sunny-side-up eggs in grass-fed butter until edges are golden and crispy. Season heavily with flaky sea salt."
+      },
+      {
+        title: "Crispy Salmon Fillets in Butter",
+        img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=80",
+        desc: "Pan-fry fresh salmon skin-side down for 4 minutes in hot butter until crispy. Flip and baste with melted butter and sea salt for another 2 minutes."
+      },
+      {
+        title: "Slow-Cooked Buttered Lamb Cutlets",
+        img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+        desc: "Season fresh lamb cutlets heavily with sea salt. Sear in melted butter on medium-high until the fat cap renders crisp and brown."
+      },
+      {
+        title: "Smoky Bacon & Egg Yolk Omelette",
+        img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80",
+        desc: "Fry 4 strips of thick-cut bacon. Whisk 3 whole eggs with 1 extra egg yolk, cook gently in the bacon fat, and fold into a rich zero-carb breakfast."
+      },
+      {
+        title: "Reverse-Seared Tomahawk Steak",
+        img: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=800&q=80",
+        desc: "Bake a thick steak low-and-slow at 110°C until internal temperature hits 48°C. Finish on a scorching hot cast iron pan with tallow for 1 minute each side."
+      }
+    ];
+
+    let currentDailyRecipe = dailyRecipeRotation[0];
+
+    function setupDailyRecipeBanner() {
+      const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+      currentDailyRecipe = dailyRecipeRotation[dayOfYear % dailyRecipeRotation.length];
+
+      document.getElementById('dailyRecipeTitle').innerText = currentDailyRecipe.title;
+      document.getElementById('dailyRecipeImg').src = currentDailyRecipe.img;
+    }
+
+    function openDailyRecipeModal() {
+      document.getElementById('modalRecipeTitle').innerText = currentDailyRecipe.title;
+      document.getElementById('modalRecipeImg').src = currentDailyRecipe.img;
+      document.getElementById('modalRecipeDesc').innerText = currentDailyRecipe.desc;
+      document.getElementById('dailyRecipeModal').classList.remove('hidden');
+    }
+
+    function closeDailyRecipeModal() {
+      document.getElementById('dailyRecipeModal').classList.add('hidden');
+    }
+
     const recipeLibrary = [
       { title: "Pan-Seared Steak & Sunny Eggs", categories: ["Beef", "Eggs"], desc: "Sear a juicy ribeye in tallow for 3 mins each side. Fry 2 sunny-side up eggs in butter until edges crisp!" },
       { title: "2-Minute Hollandaise", categories: ["Eggs", "Beef"], desc: "Blend 2 egg yolks with 100g hot melted butter and a pinch of salt." },
@@ -424,6 +499,8 @@
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
+      setupDailyRecipeBanner();
+
       db.collection('users').doc(userId).get().then(doc => {
         if (doc.exists) {
           userData = doc.data();
