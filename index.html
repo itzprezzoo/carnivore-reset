@@ -59,7 +59,7 @@
     <div class="parchment-card max-w-md w-full rounded-3xl p-6 space-y-5 shadow-2xl">
       <div class="text-center space-y-2">
         <div class="inline-flex btn-leather p-4 rounded-2xl text-3xl shadow-xl">
-          <i class="fa-solid fa-bone text-amber-500"></i>
+          <i class="fa-solid fa-mountain-sun text-amber-500"></i>
         </div>
         <h2 class="text-2xl font-black font-heading tracking-tight text-stone-900 uppercase">Camp Carnivore</h2>
         <p class="text-xs text-stone-600 font-semibold">Join the live lodge feed to track progress & compete!</p>
@@ -129,7 +129,7 @@
       <div class="flex justify-between items-center">
         <div class="flex items-center space-x-3">
           <div class="btn-leather p-2.5 rounded-2xl font-black text-lg shadow-lg">
-            <i class="fa-solid fa-campground text-amber-500"></i>
+            <i class="fa-solid fa-mountain-sun text-amber-500"></i>
           </div>
           <div>
             <h1 class="font-black font-heading text-lg tracking-tight text-amber-200 uppercase">Camp Carnivore</h1>
@@ -142,8 +142,8 @@
 
         <div class="flex flex-col items-end gap-1">
           <div class="text-right">
-            <span class="text-[9px] uppercase font-extrabold text-stone-400 tracking-wider">Start Weight</span>
-            <p id="headerStartWeight" class="text-xs font-bold text-amber-200 font-mono">103.0 kg</p>
+            <span class="text-[9px] uppercase font-extrabold text-stone-400 tracking-wider">Total Loss</span>
+            <p id="headerTotalLoss" class="text-xs font-bold text-emerald-400 font-mono">-0.0 kg</p>
           </div>
           <button onclick="resetProfileData()" class="text-[9px] text-stone-400 underline hover:text-stone-200">Reset Profile</button>
         </div>
@@ -548,7 +548,9 @@
     function applyProfile() {
       document.getElementById('headerName').innerText = userData.name;
       document.getElementById('headerTarget').innerText = `Target: < ${userData.goalWeight}kg`;
-      document.getElementById('headerStartWeight').innerText = `${userData.startWeight.toFixed(1)} kg`;
+      
+      const totalLoss = (userData.startWeight - userData.currentWeight).toFixed(1);
+      document.getElementById('headerTotalLoss').innerText = `-${totalLoss} kg`;
 
       if (userData.isSmoker) {
         document.getElementById('smokeSosBtn').classList.remove('hidden');
@@ -638,6 +640,7 @@
         formattedDate: formattedTimestamp,
         createdAt: new Date().toISOString()
       }).then(() => {
+        applyProfile();
         const saveBtn = document.getElementById('saveLogBtn');
         saveBtn.disabled = false;
         saveBtn.innerHTML = '<span>Save & Post Live</span>';
