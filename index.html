@@ -13,87 +13,118 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
   <style>
-    body { background-color: #0c0a09; color: #f5f5f4; font-family: system-ui, -apple-system, sans-serif; }
-    .camp-card { background: linear-gradient(160deg, #1c1917 0%, #0c0a09 100%); border: 1px solid #292524; }
-    .glow-ember { box-shadow: 0 0 20px rgba(220, 38, 38, 0.35); }
-    .glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.35); }
-    .glow-gold { box-shadow: 0 0 20px rgba(234, 179, 8, 0.25); }
-    .active-nav { color: #f97316 !important; font-weight: 800; border-top: 3px solid #f97316; padding-top: 6px; }
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;700&display=swap');
+    
+    body { 
+      background-color: #120e0c; 
+      color: #2c221e; 
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif; 
+    }
+    
+    .font-heading { font-family: 'Cinzel', serif; }
+    
+    .parchment-card { 
+      background-color: #f7f2e7; 
+      border: 2px solid #8c6d53; 
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(140, 109, 83, 0.15); 
+    }
+
+    .lodge-header {
+      background: linear-gradient(180deg, #241b16 0%, #17110e 100%);
+      border-bottom: 2px solid #8c6d53;
+    }
+
+    .btn-leather {
+      background: linear-gradient(145deg, #422d21 0%, #291a12 100%);
+      border: 1px solid #8c6d53;
+      color: #f7f2e7;
+    }
+
+    .btn-leather:active {
+      transform: scale(0.97);
+    }
+
+    .active-nav { 
+      color: #8c271e !important; 
+      font-weight: 800; 
+      border-top: 3px solid #8c271e; 
+      padding-top: 6px; 
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-24 md:pb-0">
 
   <!-- ONBOARDING MODAL -->
-  <div id="onboardingModal" class="fixed inset-0 bg-stone-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-gradient-to-b from-stone-900 to-stone-950 border border-amber-600/40 max-w-md w-full rounded-3xl p-6 space-y-5 shadow-2xl glow-gold">
+  <div id="onboardingModal" class="fixed inset-0 bg-stone-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="parchment-card max-w-md w-full rounded-3xl p-6 space-y-5 shadow-2xl">
       <div class="text-center space-y-2">
-        <div class="inline-flex bg-gradient-to-br from-amber-600 via-orange-600 to-red-700 text-stone-950 p-4 rounded-2xl font-black text-3xl shadow-xl">
-          <i class="fa-solid fa-campground"></i>
+        <div class="inline-flex btn-leather p-4 rounded-2xl text-3xl shadow-xl">
+          <i class="fa-solid fa-bone text-amber-500"></i>
         </div>
-        <h2 class="text-2xl font-black tracking-tight text-stone-100 uppercase">Welcome to Camp Carnivore</h2>
-        <p class="text-xs text-stone-400">Join the live tribe feed to track progress & compete!</p>
+        <h2 class="text-2xl font-black font-heading tracking-tight text-stone-900 uppercase">Camp Carnivore</h2>
+        <p class="text-xs text-stone-600 font-semibold">Join the live lodge feed to track progress & compete!</p>
       </div>
 
-      <!-- Steak & Eggs Banner Preview -->
-      <div class="relative h-28 rounded-2xl overflow-hidden border border-amber-600/30">
-        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Pan-seared Steak" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent flex items-end p-2.5">
-          <span class="text-[11px] font-black text-amber-400 uppercase tracking-wide"><i class="fa-solid fa-utensils mr-1"></i> Fuel Your Body Right</span>
+      <!-- Banner -->
+      <div class="relative h-28 rounded-2xl overflow-hidden border-2 border-amber-900/40">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Pan-seared Steak & Eggs" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/30 to-transparent flex items-end p-2.5">
+          <span class="text-[11px] font-bold text-amber-200 uppercase tracking-wide"><i class="fa-solid fa-fire mr-1"></i> Steak & Sunny Eggs Fuel</span>
         </div>
       </div>
 
       <form id="onboardingForm" onsubmit="handleOnboarding(event)" class="space-y-3.5">
         <div>
-          <label class="block text-xs font-semibold text-stone-300 mb-1">Camp Member Name</label>
-          <input type="text" id="userNameInput" placeholder="e.g. Prez" required class="w-full bg-stone-950 border border-stone-800 rounded-xl p-3 text-xs text-stone-100 focus:outline-none focus:border-amber-500">
+          <label class="block text-xs font-bold text-stone-800 mb-1">Camper Name</label>
+          <input type="text" id="userNameInput" placeholder="e.g. Prez" required class="w-full bg-stone-100 border border-stone-400 rounded-xl p-3 text-xs text-stone-900 focus:outline-none focus:border-amber-800">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-stone-300 mb-1">Current Weight (kg)</label>
-            <input type="number" step="0.1" id="userStartWeightInput" placeholder="e.g. 104.6" required class="w-full bg-stone-950 border border-stone-800 rounded-xl p-3 text-xs text-stone-100 font-mono focus:outline-none focus:border-amber-500">
+            <label class="block text-xs font-bold text-stone-800 mb-1">Current Weight (kg)</label>
+            <input type="number" step="0.1" id="userStartWeightInput" placeholder="e.g. 104.6" required class="w-full bg-stone-100 border border-stone-400 rounded-xl p-3 text-xs text-stone-900 font-mono focus:outline-none focus:border-amber-800">
           </div>
           <div>
-            <label class="block text-xs font-semibold text-stone-300 mb-1">Goal Weight (kg)</label>
-            <input type="number" step="0.1" id="userGoalWeightInput" placeholder="e.g. 74.9" required class="w-full bg-stone-950 border border-stone-800 rounded-xl p-3 text-xs text-stone-100 font-mono focus:outline-none focus:border-amber-500">
+            <label class="block text-xs font-bold text-stone-800 mb-1">Goal Weight (kg)</label>
+            <input type="number" step="0.1" id="userGoalWeightInput" placeholder="e.g. 74.9" required class="w-full bg-stone-100 border border-stone-400 rounded-xl p-3 text-xs text-stone-900 font-mono focus:outline-none focus:border-amber-800">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-stone-300 mb-1">Favorite Rations (for Recipe Ideas)</label>
-          <div class="grid grid-cols-2 gap-2 text-xs text-stone-300">
-            <label class="flex items-center gap-2 bg-stone-950/80 p-2.5 rounded-xl border border-stone-800 cursor-pointer">
-              <input type="checkbox" name="favFood" value="Beef" checked class="accent-amber-500"> 🥩 Beef / Steak
+          <label class="block text-xs font-bold text-stone-800 mb-1">Favorite Rations (for Recipe Ideas)</label>
+          <div class="grid grid-cols-2 gap-2 text-xs text-stone-800">
+            <label class="flex items-center gap-2 bg-stone-200/80 p-2.5 rounded-xl border border-stone-300 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Beef" checked class="accent-amber-800"> 🥩 Beef / Steak
             </label>
-            <label class="flex items-center gap-2 bg-stone-950/80 p-2.5 rounded-xl border border-stone-800 cursor-pointer">
-              <input type="checkbox" name="favFood" value="Lamb" checked class="accent-amber-500"> 🍖 Lamb
+            <label class="flex items-center gap-2 bg-stone-200/80 p-2.5 rounded-xl border border-stone-300 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Lamb" checked class="accent-amber-800"> 🍖 Lamb
             </label>
-            <label class="flex items-center gap-2 bg-stone-950/80 p-2.5 rounded-xl border border-stone-800 cursor-pointer">
-              <input type="checkbox" name="favFood" value="Eggs" checked class="accent-amber-500"> 🍳 Eggs / Dairy
+            <label class="flex items-center gap-2 bg-stone-200/80 p-2.5 rounded-xl border border-stone-300 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Eggs" checked class="accent-amber-800"> 🍳 Eggs / Dairy
             </label>
-            <label class="flex items-center gap-2 bg-stone-950/80 p-2.5 rounded-xl border border-stone-800 cursor-pointer">
-              <input type="checkbox" name="favFood" value="Fish" checked class="accent-amber-500"> 🐟 Fish / Seafood
+            <label class="flex items-center gap-2 bg-stone-200/80 p-2.5 rounded-xl border border-stone-300 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Fish" checked class="accent-amber-800"> 🐟 Fish / Seafood
             </label>
-            <label class="flex items-center gap-2 bg-stone-950/80 p-2.5 rounded-xl border border-stone-800 cursor-pointer">
-              <input type="checkbox" name="favFood" value="Bacon" class="accent-amber-500"> 🥓 Bacon
+            <label class="flex items-center gap-2 bg-stone-200/80 p-2.5 rounded-xl border border-stone-300 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Bacon" class="accent-amber-800"> 🥓 Bacon
             </label>
-            <label class="flex items-center gap-2 bg-stone-950/80 p-2.5 rounded-xl border border-stone-800 cursor-pointer">
-              <input type="checkbox" name="favFood" value="Chicken" class="accent-amber-500"> 🍗 Chicken
+            <label class="flex items-center gap-2 bg-stone-200/80 p-2.5 rounded-xl border border-stone-300 cursor-pointer">
+              <input type="checkbox" name="favFood" value="Chicken" class="accent-amber-800"> 🍗 Chicken
             </label>
           </div>
         </div>
 
-        <div class="bg-stone-950/80 p-3.5 rounded-2xl border border-stone-800">
+        <div class="bg-stone-200/80 p-3.5 rounded-2xl border border-stone-300">
           <label class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" id="isSmokerInput" class="w-4 h-4 accent-cyan-500 rounded-lg">
+            <input type="checkbox" id="isSmokerInput" class="w-4 h-4 accent-red-800 rounded-lg">
             <div>
-              <span class="text-xs font-bold text-stone-200">Are you trying to quit smoking?</span>
-              <p class="text-[10px] text-stone-400">Uncheck if you don't need the Smoke SOS button.</p>
+              <span class="text-xs font-bold text-stone-900">Are you trying to quit smoking?</span>
+              <p class="text-[10px] text-stone-600">Uncheck if you don't need the Smoke SOS button.</p>
             </div>
           </label>
         </div>
 
-        <button type="submit" class="w-full bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-stone-950 font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-xl transition active:scale-95">
+        <button type="submit" class="w-full btn-leather font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-xl transition">
           Enter Camp & Sync Live
         </button>
       </form>
@@ -101,18 +132,18 @@
   </div>
 
   <!-- Header -->
-  <header class="bg-stone-950 border-b border-stone-800/80 p-3.5 sticky top-0 z-40 shadow-2xl">
+  <header class="lodge-header p-3.5 sticky top-0 z-40 shadow-2xl">
     <div class="max-w-xl mx-auto space-y-2.5">
       <div class="flex justify-between items-center">
         <div class="flex items-center space-x-3">
-          <div class="bg-gradient-to-br from-amber-600 to-orange-600 text-stone-950 p-2.5 rounded-2xl font-black text-lg shadow-lg">
-            <i class="fa-solid fa-campground"></i>
+          <div class="btn-leather p-2.5 rounded-2xl font-black text-lg shadow-lg">
+            <i class="fa-solid fa-campground text-amber-500"></i>
           </div>
           <div>
-            <h1 class="font-black text-lg tracking-tight bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 bg-clip-text text-transparent uppercase">Camp Carnivore</h1>
+            <h1 class="font-black font-heading text-lg tracking-tight text-amber-200 uppercase">Camp Carnivore</h1>
             <div class="flex items-center gap-1.5 mt-0.5">
               <span id="headerName" class="bg-stone-800 text-stone-300 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-stone-700">Camper</span>
-              <span id="headerTarget" class="bg-amber-500/10 text-amber-400 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-amber-500/30">Target: &lt; 80kg</span>
+              <span id="headerTarget" class="bg-amber-900/30 text-amber-300 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-amber-800/40">Target: &lt; 80kg</span>
             </div>
           </div>
         </div>
@@ -120,17 +151,17 @@
         <div class="flex flex-col items-end gap-1">
           <div class="text-right">
             <span class="text-[9px] uppercase font-extrabold text-stone-400 tracking-wider">Start Weight</span>
-            <p id="headerStartWeight" class="text-xs font-bold text-stone-200 font-mono">103.0 kg</p>
+            <p id="headerStartWeight" class="text-xs font-bold text-amber-200 font-mono">103.0 kg</p>
           </div>
-          <button onclick="resetProfileData()" class="text-[9px] text-stone-500 underline hover:text-stone-300">Reset Profile</button>
+          <button onclick="resetProfileData()" class="text-[9px] text-stone-400 underline hover:text-stone-200">Reset Profile</button>
         </div>
       </div>
 
-      <!-- Pan-Seared Steak & Sunny Side Up Eggs Banner -->
-      <div class="relative h-24 rounded-2xl overflow-hidden border border-amber-600/30 shadow-md">
+      <!-- Steak & Sunny Side Up Eggs Banner -->
+      <div class="relative h-24 rounded-2xl overflow-hidden border border-amber-800/50 shadow-md">
         <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" alt="Pan-seared Steak with Eggs" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/30 to-transparent flex items-end justify-between p-2.5">
-          <span class="text-[11px] font-black text-amber-300 uppercase tracking-wide bg-stone-950/80 px-2 py-1 rounded-lg border border-amber-500/30">
+        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent flex items-end justify-between p-2.5">
+          <span class="text-[11px] font-bold text-amber-200 uppercase tracking-wide bg-stone-950/80 px-2 py-1 rounded-lg border border-amber-800/40">
             🥩 Pan-Seared Steak & 🍳 Eggs Fuel
           </span>
           <span class="text-[10px] text-stone-300 font-semibold bg-stone-900/80 px-2 py-0.5 rounded-md">Zero-Carb Camp</span>
@@ -139,17 +170,17 @@
 
       <!-- Action Buttons -->
       <div id="sosButtonBar" class="grid grid-cols-1 gap-2 pt-1">
-        <button onclick="openAIAnalysis()" class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-lg glow-cyan transition active:scale-95">
-          <i class="fa-solid fa-robot text-cyan-200 text-sm"></i>
+        <button onclick="openAIAnalysis()" class="btn-leather font-bold text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition">
+          <i class="fa-solid fa-robot text-amber-400 text-sm"></i>
           <span>🤖 HOW AM I DOING? (AI Advice)</span>
         </button>
 
-        <button id="smokeSosBtn" onclick="openSOS('smoke')" class="hidden bg-stone-900 hover:bg-stone-800 text-cyan-400 border border-cyan-500/40 font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-between gap-2 shadow-lg glow-smoke transition active:scale-95">
+        <button id="smokeSosBtn" onclick="openSOS('smoke')" class="hidden bg-stone-900 text-red-400 border border-red-800/40 font-bold text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-between gap-2 shadow-lg transition">
           <div class="flex items-center gap-2">
-            <i class="fa-solid fa-ban-smoking text-cyan-400 text-sm"></i>
+            <i class="fa-solid fa-ban-smoking text-red-400 text-sm"></i>
             <span>SMOKE SOS</span>
           </div>
-          <span id="smokeCountBadge" class="bg-cyan-500/20 text-cyan-300 text-[10px] px-2.5 py-0.5 rounded-full border border-cyan-500/40 font-mono font-bold">0 smoked</span>
+          <span id="smokeCountBadge" class="bg-red-900/30 text-red-200 text-[10px] px-2.5 py-0.5 rounded-full border border-red-800/40 font-mono font-bold">0 smoked</span>
         </button>
       </div>
     </div>
@@ -161,43 +192,43 @@
     <!-- TAB 1: USERS FEED -->
     <div id="tab-feed" class="tab-content space-y-4">
       <div id="socialFeedList" class="space-y-4">
-        <p class="text-xs text-stone-500 text-center py-4">Loading Camp Carnivore feed...</p>
+        <p class="text-xs text-stone-400 text-center py-4">Loading Camp Carnivore feed...</p>
       </div>
     </div>
 
     <!-- TAB 2: MY DIARY LOG -->
     <div id="tab-diary" class="tab-content hidden space-y-4">
-      <div class="camp-card rounded-3xl p-5 shadow-2xl">
-        <h2 class="text-base font-bold text-stone-100 mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-pen-to-square text-amber-500"></i> Log Meal & Photo
+      <div class="parchment-card rounded-3xl p-5 shadow-2xl">
+        <h2 class="text-base font-black font-heading text-stone-900 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-amber-900"></i> Log Meal & Photo
         </h2>
         <form id="logForm" onsubmit="handleLogSubmit(event)" class="space-y-3.5">
           <div>
-            <label class="block text-xs font-semibold text-stone-400 mb-1">Meal Description</label>
-            <input type="text" id="mealTitle" placeholder="e.g. Pan-Seared Ribeye + 2 Sunny Eggs in Tallow" required class="w-full bg-stone-950 border border-stone-800 rounded-2xl p-3 text-xs text-stone-100 focus:outline-none focus:border-amber-500">
+            <label class="block text-xs font-bold text-stone-800 mb-1">Meal Description</label>
+            <input type="text" id="mealTitle" placeholder="e.g. Pan-Seared Ribeye + 2 Sunny Eggs in Tallow" required class="w-full bg-stone-100 border border-stone-400 rounded-2xl p-3 text-xs text-stone-900 focus:outline-none focus:border-amber-800">
           </div>
           
           <div class="grid grid-cols-2 gap-3.5">
             <div>
-              <label class="block text-xs font-semibold text-stone-400 mb-1">Weight Today (kg)</label>
-              <input type="number" step="0.1" id="currentWeight" placeholder="e.g. 104.6" required class="w-full bg-stone-950 border border-stone-800 rounded-2xl p-3 text-xs text-stone-100 font-mono focus:outline-none focus:border-amber-500">
+              <label class="block text-xs font-bold text-stone-800 mb-1">Weight Today (kg)</label>
+              <input type="number" step="0.1" id="currentWeight" placeholder="e.g. 104.6" required class="w-full bg-stone-100 border border-stone-400 rounded-2xl p-3 text-xs text-stone-900 font-mono focus:outline-none focus:border-amber-800">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-stone-400 mb-1">Liquid Intake (Liters)</label>
-              <input type="number" step="0.1" id="liquidIntake" placeholder="e.g. 2.5" required class="w-full bg-stone-950 border border-stone-800 rounded-2xl p-3 text-xs text-stone-100 font-mono focus:outline-none focus:border-amber-500">
+              <label class="block text-xs font-bold text-stone-800 mb-1">Liquid Intake (Liters)</label>
+              <input type="number" step="0.1" id="liquidIntake" placeholder="e.g. 2.5" required class="w-full bg-stone-100 border border-stone-400 rounded-2xl p-3 text-xs text-stone-900 font-mono focus:outline-none focus:border-amber-800">
             </div>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-stone-400 mb-1">Meal Photo (Camera or Gallery)</label>
-            <input type="file" id="mealPhotoInput" accept="image/*" class="w-full bg-stone-950 border border-stone-800 rounded-2xl p-2.5 text-xs text-stone-300 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-stone-800 file:text-amber-400 cursor-pointer">
+            <label class="block text-xs font-bold text-stone-800 mb-1">Meal Photo (Camera or Gallery)</label>
+            <input type="file" id="mealPhotoInput" accept="image/*" class="w-full bg-stone-100 border border-stone-400 rounded-2xl p-2.5 text-xs text-stone-800 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-stone-800 file:text-amber-200 cursor-pointer">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-stone-400 mb-1">Notes / Reflections</label>
-            <textarea id="mealNotes" rows="2" placeholder="Great energy today! Hydrated with salt water." class="w-full bg-stone-950 border border-stone-800 rounded-2xl p-3 text-xs text-stone-100 focus:outline-none focus:border-amber-500"></textarea>
+            <label class="block text-xs font-bold text-stone-800 mb-1">Notes / Reflections</label>
+            <textarea id="mealNotes" rows="2" placeholder="Great energy today! Hydrated with salt water." class="w-full bg-stone-100 border border-stone-400 rounded-2xl p-3 text-xs text-stone-900 focus:outline-none focus:border-amber-800"></textarea>
           </div>
-          <button type="submit" id="saveLogBtn" class="w-full bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-xl flex items-center justify-center gap-2 transition active:scale-95">
+          <button type="submit" id="saveLogBtn" class="w-full btn-leather font-black py-3.5 rounded-2xl text-xs shadow-xl flex items-center justify-center gap-2 transition">
             <span>Save & Post Live</span>
           </button>
         </form>
@@ -206,11 +237,11 @@
 
     <!-- TAB 3: STATS -->
     <div id="tab-stats" class="tab-content hidden space-y-4">
-      <div class="camp-card rounded-3xl p-5 shadow-2xl space-y-3">
-        <h2 class="text-base font-bold text-stone-100 flex items-center gap-2">
-          <i class="fa-solid fa-chart-line text-amber-500"></i> My Weight Progress Chart
+      <div class="parchment-card rounded-3xl p-5 shadow-2xl space-y-3">
+        <h2 class="text-base font-black font-heading text-stone-900 flex items-center gap-2">
+          <i class="fa-solid fa-chart-line text-amber-900"></i> My Weight Progress Chart
         </h2>
-        <div class="w-full h-56 bg-stone-950 p-3 rounded-2xl border border-stone-800">
+        <div class="w-full h-56 bg-stone-100 p-3 rounded-2xl border border-stone-300">
           <canvas id="weightChart"></canvas>
         </div>
       </div>
@@ -218,12 +249,12 @@
 
     <!-- TAB 4: COMPARE TAB -->
     <div id="tab-compare" class="tab-content hidden space-y-4">
-      <div class="camp-card rounded-3xl p-5 shadow-2xl space-y-4">
-        <div class="border-b border-stone-800 pb-2.5">
-          <h2 class="text-base font-bold text-stone-100 flex items-center gap-2">
-            <i class="fa-solid fa-scale-balanced text-amber-400"></i> Camp Leaderboard
+      <div class="parchment-card rounded-3xl p-5 shadow-2xl space-y-4">
+        <div class="border-b border-stone-300 pb-2.5">
+          <h2 class="text-base font-black font-heading text-stone-900 flex items-center gap-2">
+            <i class="fa-solid fa-scale-balanced text-amber-900"></i> Camp Leaderboard
           </h2>
-          <p class="text-xs text-stone-400 mt-0.5">Tap on any camper to view their full progress history and photos!</p>
+          <p class="text-xs text-stone-600 mt-0.5">Tap on any camper to view their full progress history and photos!</p>
         </div>
 
         <div class="grid grid-cols-1 gap-3.5" id="compareCards">
@@ -234,31 +265,31 @@
 
     <!-- TAB 5: AI RECIPES -->
     <div id="tab-recipes" class="tab-content hidden space-y-4">
-      <div class="camp-card rounded-3xl p-5 shadow-2xl space-y-4">
-        <div class="flex justify-between items-center border-b border-stone-800 pb-2.5">
+      <div class="parchment-card rounded-3xl p-5 shadow-2xl space-y-4">
+        <div class="flex justify-between items-center border-b border-stone-300 pb-2.5">
           <div>
-            <h2 class="text-base font-bold text-stone-100 flex items-center gap-1.5">
-              <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Camp Recipe Ideas
+            <h2 class="text-base font-black font-heading text-stone-900 flex items-center gap-1.5">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-900"></i> Camp Recipe Ideas
             </h2>
-            <p class="text-[11px] text-stone-400">Recipes generated based on your favorite foods!</p>
+            <p class="text-[11px] text-stone-600">Recipes generated based on your favorite foods!</p>
           </div>
-          <button onclick="generateRecipe()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-stone-950 text-xs font-extrabold py-2 px-3.5 rounded-xl shadow transition active:scale-95">
+          <button onclick="generateRecipe()" class="btn-leather text-xs font-bold py-2 px-3.5 rounded-xl shadow transition">
             <i class="fa-solid fa-rotate mr-1"></i> New Recipe
           </button>
         </div>
 
-        <div id="recipeCardDisplay" class="bg-stone-950 p-4 rounded-2xl border border-stone-800 space-y-2.5 text-xs">
+        <div id="recipeCardDisplay" class="bg-stone-100 p-4 rounded-2xl border border-stone-300 space-y-2.5 text-xs">
           <!-- Filled by JS -->
         </div>
 
-        <div class="border-t border-stone-800 pt-3 space-y-2">
-          <h3 class="text-xs font-bold text-stone-200 flex items-center gap-1.5">
-            <i class="fa-solid fa-plus-circle text-emerald-400"></i> Add Your Own Custom Recipe
+        <div class="border-t border-stone-300 pt-3 space-y-2">
+          <h3 class="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-plus-circle text-emerald-800"></i> Add Your Own Custom Recipe
           </h3>
           <form id="customRecipeForm" onsubmit="handleAddCustomRecipe(event)" class="space-y-2">
-            <input type="text" id="customRecipeTitle" placeholder="Recipe Title (e.g. My Hollandaise Steak)" required class="w-full bg-stone-950 border border-stone-800 rounded-xl p-2.5 text-xs text-stone-100 focus:outline-none focus:border-amber-500">
-            <textarea id="customRecipeInstructions" rows="2" placeholder="Ingredients & quick steps..." required class="w-full bg-stone-950 border border-stone-800 rounded-xl p-2.5 text-xs text-stone-100 focus:outline-none focus:border-amber-500"></textarea>
-            <button type="submit" class="w-full bg-stone-800 hover:bg-stone-700 text-amber-400 font-bold py-2.5 rounded-xl text-xs border border-amber-500/30 transition">
+            <input type="text" id="customRecipeTitle" placeholder="Recipe Title (e.g. My Hollandaise Steak)" required class="w-full bg-stone-100 border border-stone-400 rounded-xl p-2.5 text-xs text-stone-900 focus:outline-none focus:border-amber-800">
+            <textarea id="customRecipeInstructions" rows="2" placeholder="Ingredients & quick steps..." required class="w-full bg-stone-100 border border-stone-400 rounded-xl p-2.5 text-xs text-stone-900 focus:outline-none focus:border-amber-800"></textarea>
+            <button type="submit" class="w-full btn-leather font-bold py-2.5 rounded-xl text-xs transition">
               Save Custom Recipe
             </button>
           </form>
@@ -269,14 +300,14 @@
   </main>
 
   <!-- USER PROFILE / DIARY PROGRESS MODAL -->
-  <div id="userProfileModal" class="fixed inset-0 bg-stone-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-stone-900 border border-amber-500/40 max-w-md w-full rounded-3xl p-5 space-y-4 max-h-[85vh] flex flex-col glow-gold">
-      <div class="flex justify-between items-center border-b border-stone-800 pb-3">
+  <div id="userProfileModal" class="fixed inset-0 bg-stone-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="parchment-card max-w-md w-full rounded-3xl p-5 space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-center border-b border-stone-300 pb-3">
         <div>
-          <h3 id="profileModalTitle" class="font-black text-stone-100 text-base">Camper Profile</h3>
-          <p id="profileModalSub" class="text-[11px] text-stone-400">Weight Loss Progress & Meal Diary</p>
+          <h3 id="profileModalTitle" class="font-black font-heading text-stone-900 text-base">Camper Profile</h3>
+          <p id="profileModalSub" class="text-[11px] text-stone-600">Weight Loss Progress & Meal Diary</p>
         </div>
-        <button onclick="closeProfileModal()" class="text-stone-400 hover:text-white p-1">
+        <button onclick="closeProfileModal()" class="text-stone-600 hover:text-stone-900 p-1">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
@@ -289,32 +320,32 @@
 
   <!-- SMOKE SOS MODAL -->
   <div id="smokeSosModal" class="fixed inset-0 bg-stone-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-stone-900 border border-cyan-500 max-w-sm w-full rounded-3xl p-5 space-y-4 glow-smoke">
-      <div class="flex justify-between items-center border-b border-stone-800 pb-2">
-        <h3 class="text-cyan-400 font-black text-base flex items-center gap-2">
-          <i class="fa-solid fa-ban-smoking text-cyan-400"></i> SMOKE CRAVING SOS
+    <div class="parchment-card max-w-sm w-full rounded-3xl p-5 space-y-4">
+      <div class="flex justify-between items-center border-b border-stone-300 pb-2">
+        <h3 class="text-red-900 font-black font-heading text-base flex items-center gap-2">
+          <i class="fa-solid fa-ban-smoking text-red-800"></i> SMOKE CRAVING SOS
         </h3>
-        <button onclick="closeSOS('smoke')" class="text-stone-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <button onclick="closeSOS('smoke')" class="text-stone-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
 
-      <div class="bg-stone-950 p-3.5 rounded-2xl border border-stone-800 text-xs space-y-2">
-        <p class="font-bold text-cyan-400 leading-tight">3-Minute Reset:</p>
-        <p class="text-stone-200">1. Take 5 deep belly breaths.</p>
-        <p class="text-stone-200">2. Drink 1 glass of ice-cold water.</p>
-        <p class="text-stone-200">3. Physical cravings pass in under 5 minutes!</p>
+      <div class="bg-stone-100 p-3.5 rounded-2xl border border-stone-300 text-xs space-y-2">
+        <p class="font-bold text-red-900 leading-tight">3-Minute Reset:</p>
+        <p class="text-stone-800">1. Take 5 deep belly breaths.</p>
+        <p class="text-stone-800">2. Drink 1 glass of ice-cold water.</p>
+        <p class="text-stone-800">3. Physical cravings pass in under 5 minutes!</p>
       </div>
 
-      <div class="border-t border-stone-800 pt-3 space-y-2">
-        <div class="flex justify-between items-center text-xs text-stone-300">
+      <div class="border-t border-stone-300 pt-3 space-y-2">
+        <div class="flex justify-between items-center text-xs text-stone-800">
           <span>Today's Cigarettes Logged:</span>
-          <span id="modalSmokeCount" class="font-mono font-bold text-cyan-400">0</span>
+          <span id="modalSmokeCount" class="font-mono font-bold text-red-900">0</span>
         </div>
-        <button onclick="logCigarette()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3 rounded-2xl text-xs shadow-lg flex items-center justify-center gap-2 transition active:scale-95">
+        <button onclick="logCigarette()" class="w-full btn-leather font-bold py-3 rounded-2xl text-xs shadow-lg flex items-center justify-center gap-2 transition">
           <i class="fa-solid fa-plus-circle"></i> Log 1 Cigarette
         </button>
       </div>
 
-      <button onclick="closeSOS('smoke')" class="w-full bg-stone-800 hover:bg-stone-700 text-stone-300 font-bold py-2.5 rounded-xl text-xs">
+      <button onclick="closeSOS('smoke')" class="w-full bg-stone-300 hover:bg-stone-400 text-stone-800 font-bold py-2.5 rounded-xl text-xs">
         Close / Craving Resisted
       </button>
     </div>
@@ -322,26 +353,26 @@
 
   <!-- AI ANALYSIS MODAL -->
   <div id="aiAnalysisModal" class="fixed inset-0 bg-stone-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-stone-900 border border-cyan-500/30 max-w-md w-full rounded-3xl p-5 space-y-4 glow-cyan flex flex-col max-h-[85vh]">
-      <div class="flex justify-between items-center border-b border-stone-800 pb-3">
-        <h3 class="text-cyan-400 font-black text-base flex items-center gap-2">
-          <i class="fa-solid fa-robot text-cyan-400 text-lg"></i> AI Analysis: How Are You Doing?
+    <div class="parchment-card max-w-md w-full rounded-3xl p-5 space-y-4 flex flex-col max-h-[85vh]">
+      <div class="flex justify-between items-center border-b border-stone-300 pb-3">
+        <h3 class="text-amber-900 font-black font-heading text-base flex items-center gap-2">
+          <i class="fa-solid fa-robot text-amber-900 text-lg"></i> AI Analysis: How Are You Doing?
         </h3>
-        <button onclick="closeAIAnalysis()" class="text-stone-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <button onclick="closeAIAnalysis()" class="text-stone-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
 
       <div class="flex-1 overflow-y-auto space-y-3.5 pr-1" id="aiAnalysisContent">
         <p class="text-xs text-stone-500 text-center py-6">AI bot is calculating your progress...</p>
       </div>
 
-      <button onclick="closeAIAnalysis()" class="w-full bg-stone-800 hover:bg-stone-700 text-stone-300 font-bold py-2.5 rounded-xl text-xs mt-1">
+      <button onclick="closeAIAnalysis()" class="w-full btn-leather font-bold py-2.5 rounded-xl text-xs mt-1">
         Got it, AI Bot!
       </button>
     </div>
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-stone-950 border-t border-stone-800 flex justify-around items-center p-2 z-40 shadow-2xl">
+  <nav class="fixed bottom-0 left-0 right-0 lodge-header flex justify-around items-center p-2 z-40 shadow-2xl">
     <button onclick="switchTab('feed')" id="nav-feed" class="nav-btn flex flex-col items-center text-amber-500 text-xs py-1 transition active-nav">
       <i class="fa-solid fa-users text-base"></i>
       <span class="text-[10px] mt-0.5 font-bold">Users</span>
@@ -553,38 +584,38 @@
           const postId = doc.id;
           const post = doc.data();
           const displayDate = post.formattedDate || (post.createdAt ? formatEntryDate(new Date(post.createdAt)) : 'Today');
-          const liquidBadge = post.liquid ? `<span class="text-[10px] text-cyan-300 font-bold bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-xl block mt-1.5"><i class="fa-solid fa-droplet text-cyan-400 mr-1.5"></i>Liters drunk: ${post.liquid.toFixed(1)} L</span>` : '';
+          const liquidBadge = post.liquid ? `<span class="text-[10px] text-amber-950 font-bold bg-amber-900/10 border border-amber-900/20 px-2.5 py-1 rounded-xl block mt-1.5"><i class="fa-solid fa-droplet text-blue-800 mr-1.5"></i>Liters drunk: ${post.liquid.toFixed(1)} L</span>` : '';
 
           feed.innerHTML += `
-            <div class="bg-gradient-to-b from-stone-900 to-stone-950 rounded-3xl p-4 border border-stone-800 space-y-3 shadow-2xl">
+            <div class="parchment-card rounded-3xl p-4 space-y-3">
               <div class="flex justify-between items-start">
                 <div class="flex items-center space-x-2.5">
-                  <button onclick="viewUserProfile('${post.userId}', '${post.userName}')" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-600 to-red-600 flex items-center justify-center text-stone-950 font-black text-xs shadow-lg">
+                  <button onclick="viewUserProfile('${post.userId}', '${post.userName}')" class="w-10 h-10 rounded-2xl btn-leather flex items-center justify-center font-black text-xs shadow-lg">
                     ${post.userName.substring(0, 3).toUpperCase()}
                   </button>
                   <div>
-                    <button onclick="viewUserProfile('${post.userId}', '${post.userName}')" class="font-bold text-stone-100 text-xs hover:underline text-left block">
+                    <button onclick="viewUserProfile('${post.userId}', '${post.userName}')" class="font-bold text-stone-900 text-xs hover:underline text-left block">
                       ${post.userName}
                     </button>
-                    <span class="text-[10px] text-stone-400 block">${displayDate}</span>
+                    <span class="text-[10px] text-stone-600 block">${displayDate}</span>
                   </div>
                 </div>
-                <span class="text-xs font-black text-amber-400 font-mono bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/30">${post.weight.toFixed(1)} kg</span>
+                <span class="text-xs font-black text-amber-900 font-mono bg-amber-900/10 px-2.5 py-1 rounded-xl border border-amber-900/20">${post.weight.toFixed(1)} kg</span>
               </div>
 
-              <p class="text-xs text-stone-300 leading-relaxed">${post.title}. ${post.notes}</p>
+              <p class="text-xs text-stone-800 leading-relaxed">${post.title}. ${post.notes}</p>
               ${liquidBadge}
-              ${post.photoUrl ? `<img src="${post.photoUrl}" class="w-full h-52 object-cover rounded-2xl border border-stone-800 shadow-md">` : ''}
+              ${post.photoUrl ? `<img src="${post.photoUrl}" class="w-full h-52 object-cover rounded-2xl border border-stone-400 shadow-md">` : ''}
 
               <!-- Comments Section -->
-              <div class="border-t border-stone-800 pt-2.5 space-y-2">
+              <div class="border-t border-stone-300 pt-2.5 space-y-2">
                 <div id="comments-list-${postId}" class="space-y-1.5 text-xs">
                   <!-- Live comments populate here -->
                 </div>
 
                 <form onsubmit="handleCommentSubmit(event, '${postId}')" class="flex gap-2 pt-1">
-                  <input type="text" id="comment-input-${postId}" placeholder="Write a comment..." required class="flex-1 bg-stone-950 border border-stone-800 rounded-xl p-2.5 text-xs text-stone-200 focus:outline-none focus:border-amber-500">
-                  <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-500 text-stone-950 font-extrabold px-3.5 py-2 rounded-xl text-xs shadow transition active:scale-95">
+                  <input type="text" id="comment-input-${postId}" placeholder="Write a comment..." required class="flex-1 bg-stone-100 border border-stone-400 rounded-xl p-2.5 text-xs text-stone-900 focus:outline-none focus:border-amber-800">
+                  <button type="submit" class="btn-leather font-extrabold px-3.5 py-2 rounded-xl text-xs shadow transition">
                     Post
                   </button>
                 </form>
@@ -602,21 +633,21 @@
         snapshot.forEach(doc => {
           const user = doc.data();
           const loss = (user.startWeight - user.currentWeight).toFixed(1);
-          const smokesText = user.isSmoker ? `<span class="text-[10px] text-cyan-400 font-mono font-bold block mt-1"><i class="fa-solid fa-ban-smoking mr-1"></i>${user.smokeCount || 0} smokes logged</span>` : '';
+          const smokesText = user.isSmoker ? `<span class="text-[10px] text-red-900 font-mono font-bold block mt-1"><i class="fa-solid fa-ban-smoking mr-1"></i>${user.smokeCount || 0} smokes logged</span>` : '';
 
           container.innerHTML += `
-            <div onclick="viewUserProfile('${user.id}', '${user.name}')" class="bg-stone-950 p-4 rounded-2xl border border-stone-800 space-y-2 cursor-pointer hover:border-amber-500/50 transition">
+            <div onclick="viewUserProfile('${user.id}', '${user.name}')" class="bg-stone-100 p-4 rounded-2xl border border-stone-300 space-y-2 cursor-pointer hover:border-amber-800/50 transition">
               <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                  <span class="font-bold text-stone-100 text-xs">${user.name} ${user.id === userId ? '(You)' : ''}</span>
-                  <span class="text-[9px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-lg font-bold">History &rarr;</span>
+                  <span class="font-bold text-stone-900 text-xs">${user.name} ${user.id === userId ? '(You)' : ''}</span>
+                  <span class="text-[9px] text-amber-900 bg-amber-900/10 border border-amber-900/20 px-2 py-0.5 rounded-lg font-bold">History &rarr;</span>
                 </div>
-                <span class="text-xs font-extrabold font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-lg">-${loss} kg</span>
+                <span class="text-xs font-extrabold font-mono text-emerald-800 bg-emerald-900/10 border border-emerald-900/20 px-2 py-0.5 rounded-lg">-${loss} kg</span>
               </div>
-              <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-stone-300 pt-1">
-                <div class="bg-stone-900 p-2 rounded-xl border border-stone-800"><span class="text-stone-500 text-[9px] block">Start</span>${user.startWeight} kg</div>
-                <div class="bg-stone-900 p-2 rounded-xl border border-stone-800"><span class="text-stone-500 text-[9px] block">Current</span>${user.currentWeight} kg</div>
-                <div class="bg-stone-900 p-2 rounded-xl border border-stone-800"><span class="text-stone-500 text-[9px] block">Goal</span>${user.goalWeight} kg</div>
+              <div class="grid grid-cols-3 gap-2 text-center text-[11px] text-stone-800 pt-1">
+                <div class="bg-stone-200 p-2 rounded-xl border border-stone-300"><span class="text-stone-500 text-[9px] block">Start</span>${user.startWeight} kg</div>
+                <div class="bg-stone-200 p-2 rounded-xl border border-stone-300"><span class="text-stone-500 text-[9px] block">Current</span>${user.currentWeight} kg</div>
+                <div class="bg-stone-200 p-2 rounded-xl border border-stone-300"><span class="text-stone-500 text-[9px] block">Goal</span>${user.goalWeight} kg</div>
               </div>
               ${smokesText}
             </div>
@@ -633,12 +664,12 @@
         snapshot.forEach(doc => {
           const comment = doc.data();
           container.innerHTML += `
-            <div class="bg-stone-950 p-2.5 rounded-xl border border-stone-800">
-              <div class="flex justify-between items-center text-[10px] text-stone-400 mb-0.5">
-                <span class="font-bold text-stone-200">${comment.userName}</span>
+            <div class="bg-stone-200/90 p-2.5 rounded-xl border border-stone-300">
+              <div class="flex justify-between items-center text-[10px] text-stone-600 mb-0.5">
+                <span class="font-bold text-stone-900">${comment.userName}</span>
                 <span>${comment.formattedDate || 'Just now'}</span>
               </div>
-              <p class="text-xs text-stone-300">${comment.text}</p>
+              <p class="text-xs text-stone-800">${comment.text}</p>
             </div>
           `;
         });
@@ -672,7 +703,7 @@
       db.collection('posts').where('userId', '==', targetUserId).get().then(snapshot => {
         const content = document.getElementById('profileModalContent');
         if (snapshot.empty) {
-          content.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">No diary entries logged yet.</p>`;
+          content.innerHTML = `<p class="text-xs text-stone-600 text-center py-4">No diary entries logged yet.</p>`;
           return;
         }
 
@@ -680,17 +711,17 @@
         snapshot.forEach(doc => {
           const post = doc.data();
           const displayDate = post.formattedDate || (post.createdAt ? formatEntryDate(new Date(post.createdAt)) : 'Logged Entry');
-          const liquidInfo = post.liquid ? `<span class="text-[10px] text-cyan-400 block mt-1.5"><i class="fa-solid fa-droplet mr-1.5"></i>Liters drunk: ${post.liquid.toFixed(1)} L</span>` : '';
+          const liquidInfo = post.liquid ? `<span class="text-[10px] text-amber-950 block mt-1.5"><i class="fa-solid fa-droplet text-blue-800 mr-1.5"></i>Liters drunk: ${post.liquid.toFixed(1)} L</span>` : '';
 
           content.innerHTML += `
-            <div class="bg-stone-950 p-3.5 rounded-2xl border border-stone-800 space-y-2">
+            <div class="bg-stone-100 p-3.5 rounded-2xl border border-stone-300 space-y-2">
               <div class="flex justify-between items-center text-xs">
-                <span class="text-[10px] text-stone-400">${displayDate}</span>
-                <span class="font-mono font-bold text-amber-400">${post.weight.toFixed(1)} kg</span>
+                <span class="text-[10px] text-stone-500">${displayDate}</span>
+                <span class="font-mono font-bold text-amber-900">${post.weight.toFixed(1)} kg</span>
               </div>
-              <p class="text-xs text-stone-200">${post.title}. ${post.notes}</p>
+              <p class="text-xs text-stone-800">${post.title}. ${post.notes}</p>
               ${liquidInfo}
-              ${post.photoUrl ? `<img src="${post.photoUrl}" class="w-full h-40 object-cover rounded-xl border border-stone-800">` : ''}
+              ${post.photoUrl ? `<img src="${post.photoUrl}" class="w-full h-40 object-cover rounded-xl border border-stone-300">` : ''}
             </div>
           `;
         });
@@ -709,10 +740,10 @@
       const display = document.getElementById('recipeCardDisplay');
       display.innerHTML = `
         <div class="flex justify-between items-start">
-          <h4 class="font-bold text-stone-100 text-sm">${selected.title}</h4>
-          <span class="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-md font-bold">Matched Favs</span>
+          <h4 class="font-bold text-stone-900 text-sm">${selected.title}</h4>
+          <span class="text-[9px] bg-amber-900/10 text-amber-900 border border-amber-900/20 px-2 py-0.5 rounded-md font-bold">Matched Favs</span>
         </div>
-        <p class="text-stone-300 leading-relaxed mt-1">${selected.desc}</p>
+        <p class="text-stone-800 leading-relaxed mt-1">${selected.desc}</p>
       `;
     }
 
@@ -774,14 +805,14 @@
         const avgLossPerDay = (loss / daysOnPlan).toFixed(2);
         
         let responseHTML = `
-          <div class="bg-stone-950 p-3.5 rounded-2xl border border-stone-800 space-y-2">
-            <h4 class="font-black text-xs text-stone-100 uppercase tracking-wider">Analysis for ${userData.name}: Day ${daysOnPlan}</h4>
-            <div class="flex items-center gap-2.5 pt-1 font-mono text-[11px] text-stone-300">
-              <span class="bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-md">Loss: ${loss} kg</span>
-              <span class="bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-md">Goal: ${userData.goalWeight.toFixed(1)} kg</span>
+          <div class="bg-stone-100 p-3.5 rounded-2xl border border-stone-300 space-y-2">
+            <h4 class="font-black text-xs text-stone-900 uppercase tracking-wider">Analysis for ${userData.name}: Day ${daysOnPlan}</h4>
+            <div class="flex items-center gap-2.5 pt-1 font-mono text-[11px] text-stone-800">
+              <span class="bg-emerald-900/10 text-emerald-900 border border-emerald-900/20 px-2 py-0.5 rounded-md">Loss: ${loss} kg</span>
+              <span class="bg-amber-900/10 text-amber-900 border border-amber-900/20 px-2 py-0.5 rounded-md">Goal: ${userData.goalWeight.toFixed(1)} kg</span>
             </div>
           </div>
-          <div class="space-y-3 leading-relaxed text-xs text-stone-200">
+          <div class="space-y-3 leading-relaxed text-xs text-stone-800">
         `;
 
         if (daysOnPlan < 3) {
@@ -797,7 +828,7 @@
         }
 
         if (userData.isSmoker && smokesLogged > 0) {
-          responseHTML += `<p class="border-t border-stone-800 pt-3 text-cyan-400">Critical analysis: ${smokesLogged} cigarettes logged in current adaptation period. Smoking severely decreases oxygen efficiency and raises cortisol. Recommendation: maximize usage of Smoke SOS. Every craving pass extends cellular efficiency.</p>`;
+          responseHTML += `<p class="border-t border-stone-300 pt-3 text-red-900 font-semibold">Critical analysis: ${smokesLogged} cigarettes logged in current adaptation period. Smoking severely decreases oxygen efficiency and raises cortisol. Recommendation: maximize usage of Smoke SOS. Every craving pass extends cellular efficiency.</p>`;
         }
 
         responseHTML += `</div>`;
