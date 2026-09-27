@@ -13,21 +13,22 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
   <style>
-    body { background-color: #050811 !important; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-    .card-gradient { background: linear-gradient(145deg, #0f172a 0%, #070d19 100%); border: 1px solid #1e293b; }
-    .glow-sugar { box-shadow: 0 0 25px rgba(239, 68, 68, 0.5); }
-    .glow-smoke { box-shadow: 0 0 25px rgba(6, 182, 212, 0.4); }
-    .glow-gold { box-shadow: 0 0 25px rgba(245, 158, 11, 0.3); }
-    .glow-card { box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.9); }
+    body { background-color: #070a12; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .card-gradient { background: linear-gradient(145deg, #131c2e 0%, #0a0f1d 100%); border: 1px solid #1e293b; }
+    .glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.45); }
+    .glow-smoke { box-shadow: 0 0 20px rgba(6, 182, 212, 0.35); }
+    .glow-gold { box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); }
+    .glow-card { box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8); }
+    .active-nav { color: #f59e0b !important; font-weight: 800; border-top: 3px solid #f59e0b; padding-top: 6px; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-24 md:pb-0">
 
   <!-- ONBOARDING MODAL -->
   <div id="onboardingModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/40 max-w-md w-full rounded-3xl p-6 space-y-5 shadow-2xl glow-gold">
+    <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/30 max-w-md w-full rounded-3xl p-6 space-y-5 shadow-2xl glow-gold">
       <div class="text-center space-y-2">
-        <div class="inline-flex bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 text-slate-950 p-4 rounded-3xl font-black text-3xl shadow-xl shadow-red-950/50">
+        <div class="inline-flex bg-gradient-to-br from-red-500 via-orange-500 to-amber-500 text-slate-950 p-4 rounded-3xl font-black text-3xl shadow-xl shadow-red-950/50 animate-bounce">
           <i class="fa-solid fa-fire-flame-curved"></i>
         </div>
         <h2 class="text-2xl font-black tracking-tight text-white bg-gradient-to-r from-red-400 via-amber-300 to-orange-400 bg-clip-text text-transparent">Carnivore Reset</h2>
@@ -37,22 +38,22 @@
       <form id="onboardingForm" onsubmit="handleOnboarding(event)" class="space-y-3.5">
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name</label>
-          <input type="text" id="userNameInput" placeholder="e.g. Alex" required class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
+          <input type="text" id="userNameInput" placeholder="e.g. Prez" required class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Current Weight (kg)</label>
-            <input type="number" step="0.1" id="userStartWeightInput" placeholder="e.g. 103" required class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-amber-500">
+            <input type="number" step="0.1" id="userStartWeightInput" placeholder="e.g. 104.6" required class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-amber-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Goal Weight (kg)</label>
-            <input type="number" step="0.1" id="userGoalWeightInput" placeholder="e.g. 79.9" required class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-amber-500">
+            <input type="number" step="0.1" id="userGoalWeightInput" placeholder="e.g. 74.9" required class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-amber-500">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Favorite Foods (for Recipe Ideas)</label>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Favorite Foods (for Recipe Generator)</label>
           <div class="grid grid-cols-2 gap-2 text-xs text-slate-300">
             <label class="flex items-center gap-2 bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80 cursor-pointer hover:border-amber-500/40">
               <input type="checkbox" name="favFood" value="Beef" checked class="accent-amber-500"> 🥩 Beef / Steak
@@ -85,7 +86,7 @@
           </label>
         </div>
 
-        <button type="submit" class="w-full bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 text-slate-950 font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-xl transition active:scale-95">
+        <button type="submit" class="w-full bg-gradient-to-r from-red-500 via-orange-500 to-amber-600 hover:from-red-600 hover:to-amber-600 text-slate-950 font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-xl transition active:scale-95">
           Join & Sync Live
         </button>
       </form>
@@ -118,14 +119,14 @@
         </div>
       </div>
 
-      <!-- SOS Bar -->
+      <!-- NEW SOS BAR -->
       <div id="sosButtonBar" class="grid grid-cols-1 gap-2 pt-1">
-        <button onclick="openSOS('sugar')" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-lg glow-sugar transition active:scale-95">
-          <i class="fa-solid fa-bolt text-yellow-300 animate-pulse text-sm"></i>
-          <span>SUGAR SOS</span>
+        <button onclick="openAIAnalysis()" class="bg-gradient-to-r from-cyan-600 via-cyan-600 to-blue-600 text-white font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-center gap-2.5 shadow-lg glow-cyan transition active:scale-95">
+          <i class="fa-solid fa-robot text-cyan-200 text-sm"></i>
+          <span>🤖 HOW AM I DOING? (AI Advice)</span>
         </button>
 
-        <button id="smokeSosBtn" onclick="openSOS('smoke')" class="hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-cyan-400 border border-cyan-500/40 font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-between gap-2 shadow-lg glow-smoke transition active:scale-95">
+        <button id="smokeSosBtn" onclick="openSOS('smoke')" class="hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/40 font-black text-xs py-2.5 px-3.5 rounded-2xl flex items-center justify-between gap-2 shadow-lg glow-smoke transition active:scale-95">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-ban-smoking text-cyan-400 text-sm"></i>
             <span>SMOKE SOS</span>
@@ -139,23 +140,6 @@
   <!-- Main Content Container -->
   <main class="max-w-xl mx-auto w-full p-3.5 flex-1 space-y-4">
 
-    <!-- Challenge Card -->
-    <div class="bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-900 border border-amber-500/50 rounded-3xl p-4 flex items-center justify-between gap-3 shadow-xl glow-gold">
-      <div class="flex items-start gap-3">
-        <div class="bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 rounded-2xl text-slate-950 font-black shrink-0 shadow-lg">
-          <i class="fa-solid fa-trophy text-lg"></i>
-        </div>
-        <div>
-          <span class="text-[9px] uppercase font-black bg-amber-500 text-slate-950 px-2 py-0.5 rounded-md font-mono tracking-wider">Daily Quest</span>
-          <h3 class="font-bold text-slate-100 text-xs mt-1">Sub-Zero Salt Hydration</h3>
-          <p class="text-[11px] text-slate-400 mt-0.5">Drink 500ml ice water with sea salt when cravings strike!</p>
-        </div>
-      </div>
-      <button onclick="completeChallenge()" id="challengeBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold text-[11px] px-3.5 py-2.5 rounded-2xl whitespace-nowrap shadow-lg shrink-0 transition active:scale-95">
-        <i class="fa-solid fa-check-circle mr-1"></i> Done (+50 pts)
-      </button>
-    </div>
-
     <!-- TAB 1: USERS FEED -->
     <div id="tab-feed" class="tab-content space-y-4">
       <div id="socialFeedList" class="space-y-4">
@@ -167,29 +151,35 @@
     <div id="tab-diary" class="tab-content hidden space-y-4">
       <div class="card-gradient rounded-3xl p-5 shadow-2xl glow-card">
         <h2 class="text-base font-bold text-slate-100 mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-pen-to-square text-red-500"></i> Log Meal & Photo
+          <i class="fa-solid fa-pen-to-square text-amber-500"></i> Log Meal & Photo
         </h2>
         <form id="logForm" onsubmit="handleLogSubmit(event)" class="space-y-3.5">
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Meal Description</label>
-            <input type="text" id="mealTitle" placeholder="e.g. Small Sirloin + 2 Eggs in Butter" required class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 focus:outline-none focus:border-red-500">
+            <input type="text" id="mealTitle" placeholder="e.g. Small Sirloin + 2 Eggs in Butter" required class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
           </div>
           
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 mb-1">Weight Today (kg)</label>
-            <input type="number" step="0.1" id="currentWeight" placeholder="e.g. 101.0" required class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-red-500">
+          <div class="grid grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Weight Today (kg)</label>
+              <input type="number" step="0.1" id="currentWeight" placeholder="e.g. 101.0" required class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Liquid Intake (Liters)</label>
+              <input type="number" step="0.1" id="liquidIntake" placeholder="e.g. 2.5" required class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-amber-500">
+            </div>
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Meal Photo (Camera or Gallery)</label>
-            <input type="file" id="mealPhotoInput" accept="image/*" class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-2.5 text-xs text-slate-300 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 cursor-pointer">
+            <input type="file" id="mealPhotoInput" accept="image/*" class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-2.5 text-xs text-slate-300 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-amber-400 hover:file:bg-slate-700 cursor-pointer">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-400 mb-1">Notes / Reflections</label>
-            <textarea id="mealNotes" rows="2" placeholder="Felt great after meal! Drink cold salt water." class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 focus:outline-none focus:border-red-500"></textarea>
+            <textarea id="mealNotes" rows="2" placeholder="Felt great after meal! Drink cold salt water." class="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3 text-xs text-slate-100 focus:outline-none focus:border-amber-500"></textarea>
           </div>
-          <button type="submit" id="saveLogBtn" class="w-full bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-xl flex items-center justify-center gap-2 transition active:scale-95">
+          <button type="submit" id="saveLogBtn" class="w-full bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-bold py-3.5 rounded-2xl text-xs shadow-xl flex items-center justify-center gap-2 transition active:scale-95">
             <span>Save & Post Live</span>
           </button>
         </form>
@@ -248,7 +238,7 @@
             <i class="fa-solid fa-plus-circle text-emerald-400"></i> Add Your Own Custom Recipe
           </h3>
           <form id="customRecipeForm" onsubmit="handleAddCustomRecipe(event)" class="space-y-2">
-            <input type="text" id="customRecipeTitle" placeholder="Recipe Title (e.g. My Quick Hollandaise Steak)" required class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
+            <input type="text" id="customRecipeTitle" placeholder="Recipe Title (e.g. My Hollandaise Steak)" required class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
             <textarea id="customRecipeInstructions" rows="2" placeholder="Ingredients & quick steps..." required class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500"></textarea>
             <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold py-2.5 rounded-xl text-xs border border-amber-500/30 transition">
               Save Custom Recipe
@@ -262,7 +252,7 @@
 
   <!-- USER PROFILE / DIARY PROGRESS MODAL -->
   <div id="userProfileModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-amber-500/40 max-w-md w-full rounded-3xl p-5 space-y-4 max-h-[85vh] flex flex-col glow-gold">
+    <div class="bg-slate-900 border border-amber-500/30 max-w-md w-full rounded-3xl p-5 space-y-4 max-h-[85vh] flex flex-col glow-gold">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <div>
           <h3 id="profileModalTitle" class="font-black text-slate-100 text-base">Friend Profile</h3>
@@ -279,26 +269,18 @@
     </div>
   </div>
 
-  <!-- SOS MODALS -->
-  <div id="sugarSosModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-red-500 max-w-sm w-full rounded-3xl p-5 space-y-3 glow-sugar">
-      <h3 class="text-red-500 font-black text-base flex items-center gap-2"><i class="fa-solid fa-bolt text-yellow-300"></i> SUGAR SOS</h3>
-      <p class="text-xs text-slate-200">Drink 300ml <strong>ICE-COLD salt water</strong> immediately!</p>
-      <button onclick="closeSOS('sugar')" class="w-full bg-red-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg">I Got This!</button>
-    </div>
-  </div>
-
+  <!-- SOS / SMOKE MODAL -->
   <div id="smokeSosModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-cyan-500 max-w-sm w-full rounded-3xl p-5 space-y-4 glow-smoke">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
         <h3 class="text-cyan-400 font-black text-base flex items-center gap-2">
           <i class="fa-solid fa-ban-smoking text-cyan-400"></i> SMOKE CRAVING SOS
         </h3>
-        <button onclick="closeSOS('smoke')" class="text-slate-400"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <button onclick="closeSOS('smoke')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
 
       <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 text-xs space-y-2">
-        <p class="font-bold text-cyan-400">3-Minute Reset Plan:</p>
+        <p class="font-bold text-cyan-400 leading-tight">3-Minute Reset:</p>
         <p class="text-slate-200">1. Take 5 deep belly breaths.</p>
         <p class="text-slate-200">2. Drink 1 glass of ice-cold water.</p>
         <p class="text-slate-200">3. Physical cravings pass in under 5 minutes!</p>
@@ -309,20 +291,40 @@
           <span>Today's Cigarettes Logged:</span>
           <span id="modalSmokeCount" class="font-mono font-bold text-cyan-400">0</span>
         </div>
-        <button onclick="logCigarette()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-lg flex items-center justify-center gap-2">
+        <button onclick="logCigarette()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3 rounded-2xl text-xs shadow-lg flex items-center justify-center gap-2 transition active:scale-95">
           <i class="fa-solid fa-plus-circle"></i> Log 1 Cigarette
         </button>
       </div>
 
-      <button onclick="closeSOS('smoke')" class="w-full bg-slate-800 text-slate-300 font-bold py-2.5 rounded-2xl text-xs">
+      <button onclick="closeSOS('smoke')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs">
         Close / Craving Resisted
+      </button>
+    </div>
+  </div>
+
+  <!-- AI ANALYSIS MODAL -->
+  <div id="aiAnalysisModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-cyan-500/30 max-w-md w-full rounded-3xl p-5 space-y-4 glow-cyan flex flex-col max-h-[85vh]">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="text-cyan-400 font-black text-base flex items-center gap-2">
+          <i class="fa-solid fa-robot text-cyan-400 text-lg"></i> AI Analysis: How Are You Doing?
+        </h3>
+        <button onclick="closeAIAnalysis()" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-3.5 pr-1" id="aiAnalysisContent">
+        <p class="text-xs text-slate-500 text-center py-6">AI bot is calculating your progress...</p>
+      </div>
+
+      <button onclick="closeAIAnalysis()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs mt-1">
+        Got it, AI Bot!
       </button>
     </div>
   </div>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
   <nav class="fixed bottom-0 left-0 right-0 bg-slate-950/95 border-t border-slate-800/80 flex justify-around items-center p-2 z-40 shadow-2xl backdrop-blur-md">
-    <button onclick="switchTab('feed')" id="nav-feed" class="nav-btn flex flex-col items-center text-red-400 text-xs py-1 transition">
+    <button onclick="switchTab('feed')" id="nav-feed" class="nav-btn flex flex-col items-center text-red-400 text-xs py-1 transition active-nav">
       <i class="fa-solid fa-users text-base"></i>
       <span class="text-[10px] mt-0.5 font-bold">Users</span>
     </button>
@@ -366,10 +368,10 @@
     let myChart = null;
 
     const recipeLibrary = [
-      { title: "2-Minute Blender Hollandaise", categories: ["Eggs", "Beef"], desc: "Blend 2 egg yolks with 100g hot melted butter and a pinch of salt until thick and creamy!" },
-      { title: "Pan-Seared Ribeye in Tallow", categories: ["Beef"], desc: "Sear a 300g ribeye on high heat in beef tallow for 3 mins each side. Top with butter salt." },
-      { title: "Slow-Cooked Buttered Lamb Cutlets", categories: ["Lamb"], desc: "Season lamb cutlets heavily with sea salt and sear in butter until crispy." },
-      { title: "Crispy Salmon Fillet with Butter Sauce", categories: ["Fish"], desc: "Pan-fry salmon skin-down for 4 mins until crispy, then baste with butter." }
+      { title: "2-Minute Hollandaise", categories: ["Eggs", "Beef"], desc: "Blend 2 egg yolks with 100g hot melted butter and a pinch of salt." },
+      { title: "Pan-Seared Ribeye in Tallow", categories: ["Beef"], desc: "Sear a 300g ribeye on high heat in beef tallow." },
+      { title: "Buttered Lamb Cutlets", categories: ["Lamb"], desc: "Season lamb cutlets heavily with sea salt and sear in butter." },
+      { title: "Crispy Salmon Fillet with Butter", categories: ["Fish"], desc: "Pan-fry salmon skin-down for 4 mins until crispy, then baste with butter." }
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -424,13 +426,9 @@
 
       if (userData.isSmoker) {
         document.getElementById('smokeSosBtn').classList.remove('hidden');
-        document.getElementById('sosButtonBar').classList.remove('grid-cols-1');
-        document.getElementById('sosButtonBar').classList.add('grid-cols-2');
         updateSmokeBadge();
       } else {
         document.getElementById('smokeSosBtn').classList.add('hidden');
-        document.getElementById('sosButtonBar').classList.remove('grid-cols-2');
-        document.getElementById('sosButtonBar').classList.add('grid-cols-1');
       }
 
       generateRecipe();
@@ -446,7 +444,6 @@
       userData.smokeCount = (userData.smokeCount || 0) + 1;
       updateSmokeBadge();
       db.collection('users').doc(userId).update({ smokeCount: userData.smokeCount });
-      alert(`Cigarette logged. Total count: ${userData.smokeCount}`);
     }
 
     function compressImage(file, maxWidth, quality, callback) {
@@ -486,6 +483,7 @@
       const title = document.getElementById('mealTitle').value;
       const weight = parseFloat(document.getElementById('currentWeight').value);
       const notes = document.getElementById('mealNotes').value;
+      const liquid = parseFloat(document.getElementById('liquidIntake').value); // LIQUID COUNT
       const photoFileInput = document.getElementById('mealPhotoInput');
 
       userData.currentWeight = weight;
@@ -493,14 +491,14 @@
 
       if (photoFileInput && photoFileInput.files && photoFileInput.files[0]) {
         compressImage(photoFileInput.files[0], 800, 0.7, function(compressedUrl) {
-          savePostToDB(title, weight, notes, compressedUrl, formattedTimestamp);
+          savePostToDB(title, weight, notes, liquid, compressedUrl, formattedTimestamp);
         });
       } else {
-        savePostToDB(title, weight, notes, null, formattedTimestamp);
+        savePostToDB(title, weight, notes, liquid, null, formattedTimestamp);
       }
     }
 
-    function savePostToDB(title, weight, notes, photoUrl, formattedTimestamp) {
+    function savePostToDB(title, weight, notes, liquid, photoUrl, formattedTimestamp) {
       db.collection('users').doc(userId).update({ currentWeight: weight });
 
       db.collection('posts').add({
@@ -509,6 +507,7 @@
         title: title,
         weight: weight,
         notes: notes,
+        liquid: liquid || null, // LIQUID COUNT
         photoUrl: photoUrl || null,
         formattedDate: formattedTimestamp,
         createdAt: new Date().toISOString()
@@ -518,7 +517,6 @@
         saveBtn.innerHTML = '<span>Save & Post Live</span>';
 
         document.getElementById('logForm').reset();
-        alert('Log & Photo saved to live feed!');
         switchTab('feed');
       }).catch(error => {
         console.error("Firestore Upload Error: ", error);
@@ -537,6 +535,7 @@
           const postId = doc.id;
           const post = doc.data();
           const displayDate = post.formattedDate || (post.createdAt ? formatEntryDate(new Date(post.createdAt)) : 'Today');
+          const liquidBadge = post.liquid ? `<span class="text-[10px] text-cyan-300 font-bold bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-xl block mt-1.5"><i class="fa-solid fa-droplet text-cyan-400 mr-1.5"></i>Liters drunk: ${post.liquid.toFixed(1)} L</span>` : '';
 
           feed.innerHTML += `
             <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl p-4 border border-slate-800 space-y-3 shadow-2xl glow-card">
@@ -556,6 +555,7 @@
               </div>
 
               <p class="text-xs text-slate-300 leading-relaxed">${post.title}. ${post.notes}</p>
+              ${liquidBadge}
               ${post.photoUrl ? `<img src="${post.photoUrl}" class="w-full h-52 object-cover rounded-2xl border border-slate-800/80 shadow-md">` : ''}
 
               <!-- Comments Section -->
@@ -566,7 +566,7 @@
 
                 <form onsubmit="handleCommentSubmit(event, '${postId}')" class="flex gap-2 pt-1">
                   <input type="text" id="comment-input-${postId}" placeholder="Write a comment..." required class="flex-1 bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
-                  <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold px-3.5 py-2 rounded-xl text-xs shadow transition active:scale-95">
+                  <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold px-3.5 py-2 rounded-xl text-xs shadow transition active:scale-95">
                     Post
                   </button>
                 </form>
@@ -662,6 +662,7 @@
         snapshot.forEach(doc => {
           const post = doc.data();
           const displayDate = post.formattedDate || (post.createdAt ? formatEntryDate(new Date(post.createdAt)) : 'Logged Entry');
+          const liquidInfo = post.liquid ? `<span class="text-[10px] text-cyan-400 block mt-1.5"><i class="fa-solid fa-droplet mr-1.5"></i>Liters drunk: ${post.liquid.toFixed(1)} L</span>` : '';
 
           content.innerHTML += `
             <div class="bg-slate-950/90 p-3.5 rounded-2xl border border-slate-800 space-y-2">
@@ -670,6 +671,7 @@
                 <span class="font-mono font-bold text-amber-400">${post.weight.toFixed(1)} kg</span>
               </div>
               <p class="text-xs text-slate-200">${post.title}. ${post.notes}</p>
+              ${liquidInfo}
               ${post.photoUrl ? `<img src="${post.photoUrl}" class="w-full h-40 object-cover rounded-xl border border-slate-800">` : ''}
             </div>
           `;
@@ -719,14 +721,14 @@
       document.getElementById(`tab-${tabId}`).classList.remove('hidden');
 
       document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('text-red-400', 'font-bold');
+        btn.classList.remove('active-nav');
         btn.classList.add('text-slate-400');
       });
 
       const activeNav = document.getElementById(`nav-${tabId}`);
       if(activeNav) {
         activeNav.classList.remove('text-slate-400');
-        activeNav.classList.add('text-red-400', 'font-bold');
+        activeNav.classList.add('active-nav');
       }
 
       if(tabId === 'stats') setTimeout(initChart, 100);
@@ -734,33 +736,81 @@
     }
 
     function openSOS(type) {
-      if(type === 'sugar') document.getElementById('sugarSosModal').classList.remove('hidden');
       if(type === 'smoke') document.getElementById('smokeSosModal').classList.remove('hidden');
     }
 
     function closeSOS(type) {
-      if(type === 'sugar') document.getElementById('sugarSosModal').classList.add('hidden');
       if(type === 'smoke') document.getElementById('smokeSosModal').classList.add('hidden');
     }
 
-    function completeChallenge() {
-      const btn = document.getElementById('challengeBtn');
-      btn.className = 'bg-emerald-600 text-white font-bold text-[11px] px-3.5 py-2.5 rounded-2xl shadow-lg';
-      btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Done (+50 pts)';
-      alert('Challenge Completed!');
+    // AI ANALYSIS MODE
+    function openAIAnalysis() {
+      const content = document.getElementById('aiAnalysisContent');
+      content.innerHTML = '<p class="text-xs text-slate-500 text-center py-6"><i class="fa-solid fa-spinner animate-spin"></i> AI Bot is processing your data...</p>';
+      document.getElementById('aiAnalysisModal').classList.remove('hidden');
+
+      // AI Analysis Script - Personal Feedback
+      setTimeout(() => {
+        const loss = (userData.startWeight - userData.currentWeight).toFixed(1);
+        const smokesLogged = userData.smokeCount || 0;
+        const joinedDate = new Date(userData.joinedAt);
+        const daysOnPlan = Math.max(1, Math.round((new Date() - joinedDate) / (1000 * 60 * 60 * 24)));
+        const avgLossPerDay = (loss / daysOnPlan).toFixed(2);
+        
+        let responseHTML = `
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-2">
+            <h4 class="font-black text-xs text-slate-100 uppercase tracking-wider">Analysis for ${userData.name}: Day ${daysOnPlan}</h4>
+            <div class="flex items-center gap-2.5 pt-1 font-mono text-[11px] text-slate-300">
+              <span class="bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-md">Loss: ${loss} kg</span>
+              <span class="bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-md">Goal: ${userData.goalWeight.toFixed(1)} kg</span>
+            </div>
+          </div>
+          <div class="space-y-3 leading-relaxed text-xs text-slate-200">
+        `;
+
+        if (daysOnPlan < 3) {
+          responseHTML += `<p>Greetings, ${userData.name}! Welcome to Carnivore Reset. Initial analysis: Good data. Your starting weight of ${userData.startWeight.toFixed(1)}kg is logged. Focus for improved efficiency: prioritize strict water hydration. Cravings pass in under 5 minutes.</p>`;
+        } else if (daysOnPlan < 14) {
+          if (avgLossPerDay < 0.2) {
+            responseHTML += `<p>Data suggests slow adaptation. Analysis shows current loss at ${loss}kg over ${daysOnPlan} days. Efficiency needs improvement. Intervention suggested: ensure 100% strictness with favorite foods lists (${userData.favFoods.join(', ')}) and minimize dairy intake. Boost ice water hydration protocol.</p>`;
+          } else {
+            responseHTML += `<p>Excellent progress detected! System shows ${loss}kg loss over ${daysOnPlan} days. You are exceeding base adaptation rates. Maintain current strictness. Recommendation: boost training intensity for maximum metabolic burn.</p>`;
+          }
+        } else {
+          responseHTML += `<p>Long-term adaptation confirmed. You have been on plan for ${daysOnPlan} days with a notable ${loss}kg reduction toward your target. Systems indicate efficiency is high. Recommendation for next phase: fine-tune strictness by prioritizing only Beef/Fat. Monitor energy levels strictly.</p>`;
+        }
+
+        // Add context if they are logging cigarettes
+        if (userData.isSmoker && smokesLogged > 0) {
+          responseHTML += `<p class="border-t border-slate-800 pt-3 text-cyan-400">Critical analysis: ${smokesLogged} cigarettes logged in current adaptation period. Smoking severely decreases oxygen efficiency and raises cortisol. Recommendation: maximize usage of Smoke SOS. Every craving pass extends cellular efficiency.</p>`;
+        }
+
+        responseHTML += `</div>`;
+        content.innerHTML = responseHTML;
+      }, 1500); // Simulate processing time
     }
 
-    function initChart() {
-      const ctx = document.getElementById('weightChart').getContext('2d');
-      if (myChart) myChart.destroy();
-      myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: userLogs.map(l => l.date),
-          datasets: [{ label: 'Weight (kg)', data: userLogs.map(l => l.weight), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
+    function closeAIAnalysis() {
+      document.getElementById('aiAnalysisModal').classList.add('hidden');
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active-nav');
+        btn.classList.add('text-slate-400');
       });
+
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if(activeNav) {
+        activeNav.classList.remove('text-slate-400');
+        activeNav.classList.add('active-nav');
+      }
+
+      if(tabId === 'stats') setTimeout(initChart, 100);
+      if(tabId === 'compare') listenToLiveTribe();
     }
 
     switchTab('feed');
