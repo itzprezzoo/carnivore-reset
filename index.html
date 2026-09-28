@@ -186,7 +186,7 @@
   <!-- Main Content Container -->
   <main class="max-w-xl mx-auto w-full p-3.5 flex-1 space-y-4">
 
-    <!-- TAB 1: USERS FEED -->
+    <!-- TAB 1: CAMPERS FEED -->
     <div id="tab-feed" class="tab-content space-y-4">
       <div id="socialFeedList" class="space-y-4">
         <p class="text-xs text-stone-400 text-center py-4">Loading Camp Carnivore feed...</p>
@@ -197,7 +197,7 @@
     <div id="tab-diary" class="tab-content hidden space-y-4">
       <div class="parchment-card rounded-3xl p-5 shadow-2xl">
         <h2 class="text-base font-black font-heading text-stone-900 mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-pen-to-square text-amber-900"></i> Log Meal & Photo
+          <i class="fa-solid fa-pen-to-square text-amber-900"></i> Log Meal & Photos
         </h2>
         <form id="logForm" onsubmit="handleLogSubmit(event)" class="space-y-3.5">
           <div>
@@ -217,8 +217,9 @@
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-stone-800 mb-1">Meal Photo (Camera or Gallery)</label>
-            <input type="file" id="mealPhotoInput" accept="image/*" class="w-full bg-stone-100 border border-stone-400 rounded-2xl p-2.5 text-xs text-stone-800 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-stone-800 file:text-amber-200 cursor-pointer">
+            <label class="block text-xs font-bold text-stone-800 mb-1">Meal / Scale Photos (Upload up to 3)</label>
+            <input type="file" id="mealPhotoInput" accept="image/*" multiple class="w-full bg-stone-100 border border-stone-400 rounded-2xl p-2.5 text-xs text-stone-800 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-stone-800 file:text-amber-200 cursor-pointer">
+            <p class="text-[10px] text-stone-600 mt-1">Select up to 3 photos (e.g. scale readout, food, drink).</p>
           </div>
 
           <div>
@@ -400,7 +401,7 @@
   <nav class="fixed bottom-0 left-0 right-0 lodge-header flex justify-around items-center p-2 z-40 shadow-2xl">
     <button onclick="switchTab('feed')" id="nav-feed" class="nav-btn flex flex-col items-center text-amber-500 text-xs py-1 transition active-nav">
       <i class="fa-solid fa-users text-base"></i>
-      <span class="text-[10px] mt-0.5 font-bold">Users</span>
+      <span class="text-[10px] mt-0.5 font-bold">Campers</span>
     </button>
     <button onclick="switchTab('diary')" id="nav-diary" class="nav-btn flex flex-col items-center text-stone-400 text-xs py-1 transition">
       <i class="fa-solid fa-book-open text-base"></i>
@@ -606,7 +607,7 @@
       e.preventDefault();
       const saveBtn = document.getElementById('saveLogBtn');
       saveBtn.disabled = true;
-      saveBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> <span>Uploading... Please wait</span>';
+      saveBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> <span>Uploading photos... Please wait</span>';
 
       const title = document.getElementById('mealTitle').value;
       const weight = parseFloat(document.getElementById('currentWeight').value);
@@ -617,16 +618,27 @@
       userData.currentWeight = weight;
       const formattedTimestamp = formatEntryDate(new Date());
 
-      if (photoFileInput && photoFileInput.files && photoFileInput.files[0]) {
-        compressImage(photoFileInput.files[0], 800, 0.7, function(compressedUrl) {
-          savePostToDB(title, weight, notes, liquid, compressedUrl, formattedTimestamp);
+      const files = photoFileInput && photoFileInput.files ? Array.from(photoFileInput.files).slice(0, 3) : [];
+      
+      if (files.length > 0) {
+        let compressedUrls = [];
+        let processedCount = 0;
+
+        files.forEach((file) => {
+          compressImage(file, 800, 0.7, function(compressedUrl) {
+            compressedUrls.push(compressedUrl);
+            processedCount++;
+            if (processedCount === files.length) {
+              savePostToDB(title, weight, notes, liquid, compressedUrls, formattedTimestamp);
+            }
+          });
         });
       } else {
-        savePostToDB(title, weight, notes, liquid, null, formattedTimestamp);
+        savePostToDB(title, weight, notes, liquid, [], formattedTimestamp);
       }
     }
 
-    function savePostToDB(title, weight, notes, liquid, photoUrl, formattedTimestamp) {
+    function savePostToDB(title, weight, notes, liquid, photoUrls, formattedTimestamp) {
       db.collection('users').doc(userId).update({ currentWeight: weight });
 
       db.collection('posts').add({
@@ -636,7 +648,7 @@
         weight: weight,
         notes: notes,
         liquid: liquid || null,
-        photoUrl: photoUrl || null,
+        photoUrls: photoUrls || [],
         formattedDate: formattedTimestamp,
         createdAt: new Date().toISOString()
       }).then(() => {
@@ -656,6 +668,30 @@
       });
     }
 
+    function renderPhotoGallery(urls) {
+      if (!urls || urls.length === 0) return '';
+      if (typeof urls === 'string') urls = [urls]; // Fallback for old single-photo uploads
+
+      if (urls.length === 1) {
+        return `<img src="${urls[0]}" class="w-full h-52 object-cover rounded-2xl border border-stone-400 shadow-md">`;
+      } else if (urls.length === 2) {
+        return `
+          <div class="grid grid-cols-2 gap-2">
+            <img src="${urls[0]}" class="w-full h-44 object-cover rounded-2xl border border-stone-400 shadow-md">
+            <img src="${urls[1]}" class="w-full h-44 object-cover rounded-2xl border border-stone-400 shadow-md">
+          </div>
+        `;
+      } else {
+        return `
+          <div class="grid grid-cols-3 gap-1.5">
+            <img src="${urls[0]}" class="w-full h-36 object-cover rounded-xl border border-stone-400 shadow-md">
+            <img src="${urls[1]}" class="w-full h-36 object-cover rounded-xl border border-stone-400 shadow-md">
+            <img src="${urls[2]}" class="w-full h-36 object-cover rounded-xl border border-stone-400 shadow-md">
+          </div>
+        `;
+      }
+    }
+
     function listenToLiveTribe() {
       db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
         const feed = document.getElementById('socialFeedList');
@@ -665,6 +701,7 @@
           const post = doc.data();
           const displayDate = post.formattedDate || (post.createdAt ? formatEntryDate(new Date(post.createdAt)) : 'Today');
           const liquidBadge = post.liquid ? `<span class="text-[10px] text-amber-950 font-bold bg-amber-900/10 border border-amber-900/20 px-2.5 py-1 rounded-xl block mt-1.5"><i class="fa-solid fa-droplet text-blue-800 mr-1.5"></i>Liters drunk: ${post.liquid.toFixed(1)} L</span>` : '';
+          const photos = post.photoUrls || (post.photoUrl ? [post.photoUrl] : []);
 
           feed.innerHTML += `
             <div class="parchment-card rounded-3xl p-4 space-y-3">
@@ -685,7 +722,7 @@
 
               <p class="text-xs text-stone-800 leading-relaxed">${post.title}. ${post.notes}</p>
               ${liquidBadge}
-              ${post.photoUrl ? `<img src="${post.photoUrl}" class="w-full h-52 object-cover rounded-2xl border border-stone-400 shadow-md">` : ''}
+              ${renderPhotoGallery(photos)}
 
               <!-- Comments Section -->
               <div class="border-t border-stone-300 pt-2.5 space-y-2">
@@ -792,6 +829,7 @@
           const post = doc.data();
           const displayDate = post.formattedDate || (post.createdAt ? formatEntryDate(new Date(post.createdAt)) : 'Logged Entry');
           const liquidInfo = post.liquid ? `<span class="text-[10px] text-amber-950 block mt-1.5"><i class="fa-solid fa-droplet text-blue-800 mr-1.5"></i>Liters drunk: ${post.liquid.toFixed(1)} L</span>` : '';
+          const photos = post.photoUrls || (post.photoUrl ? [post.photoUrl] : []);
 
           content.innerHTML += `
             <div class="bg-stone-100 p-3.5 rounded-2xl border border-stone-300 space-y-2">
@@ -801,7 +839,7 @@
               </div>
               <p class="text-xs text-stone-800">${post.title}. ${post.notes}</p>
               ${liquidInfo}
-              ${post.photoUrl ? `<img src="${post.photoUrl}" class="w-full h-40 object-cover rounded-xl border border-stone-300">` : ''}
+              ${renderPhotoGallery(photos)}
             </div>
           `;
         });
