@@ -133,19 +133,26 @@
           </div>
           <div>
             <h1 class="font-black font-heading text-lg tracking-tight text-amber-200 uppercase">Camp Carnivore</h1>
-            <div class="flex items-center gap-1.5 mt-0.5">
-              <span id="headerName" class="bg-stone-800 text-stone-300 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-stone-700">Camper</span>
-              <span id="headerTarget" class="bg-amber-900/30 text-amber-300 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-amber-800/40">Target: &lt; 80kg</span>
-            </div>
+            <span id="headerName" class="bg-stone-800 text-stone-300 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-stone-700">Camper</span>
           </div>
         </div>
 
-        <div class="flex flex-col items-end gap-1">
-          <div class="text-right">
-            <span class="text-[9px] uppercase font-extrabold text-stone-400 tracking-wider">Total Loss</span>
-            <p id="headerTotalLoss" class="text-xs font-bold text-emerald-400 font-mono">-0.0 kg</p>
-          </div>
-          <button onclick="resetProfileData()" class="text-[9px] text-stone-400 underline hover:text-stone-200">Reset Profile</button>
+        <button onclick="resetProfileData()" class="text-[9px] text-stone-400 underline hover:text-stone-200">Reset Profile</button>
+      </div>
+
+      <!-- WEIGHT STATS BAR: START, CURRENT, GOAL -->
+      <div class="grid grid-cols-3 gap-2 bg-stone-950/70 p-2.5 rounded-2xl border border-stone-800/80 text-center font-mono">
+        <div class="bg-stone-900/80 p-1.5 rounded-xl border border-stone-800">
+          <span class="text-[9px] uppercase font-extrabold text-stone-400 block tracking-wider">Start</span>
+          <span id="headerStartWeight" class="text-xs font-bold text-amber-200">0.0 kg</span>
+        </div>
+        <div class="bg-stone-900/80 p-1.5 rounded-xl border border-amber-800/40">
+          <span class="text-[9px] uppercase font-extrabold text-amber-400 block tracking-wider">Current</span>
+          <span id="headerCurrentWeight" class="text-xs font-bold text-amber-100">0.0 kg</span>
+        </div>
+        <div class="bg-stone-900/80 p-1.5 rounded-xl border border-stone-800">
+          <span class="text-[9px] uppercase font-extrabold text-stone-400 block tracking-wider">Goal</span>
+          <span id="headerGoalWeight" class="text-xs font-bold text-emerald-400">0.0 kg</span>
         </div>
       </div>
 
@@ -548,10 +555,10 @@
 
     function applyProfile() {
       document.getElementById('headerName').innerText = userData.name;
-      document.getElementById('headerTarget').innerText = `Target: < ${userData.goalWeight}kg`;
       
-      const totalLoss = (userData.startWeight - userData.currentWeight).toFixed(1);
-      document.getElementById('headerTotalLoss').innerText = `-${totalLoss} kg`;
+      document.getElementById('headerStartWeight').innerText = `${userData.startWeight.toFixed(1)} kg`;
+      document.getElementById('headerCurrentWeight').innerText = `${userData.currentWeight.toFixed(1)} kg`;
+      document.getElementById('headerGoalWeight').innerText = `${userData.goalWeight.toFixed(1)} kg`;
 
       if (userData.isSmoker) {
         document.getElementById('smokeSosBtn').classList.remove('hidden');
